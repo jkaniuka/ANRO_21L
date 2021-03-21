@@ -19,6 +19,13 @@ def generate_launch_description():
             output='screen',
             emulate_tty=True,
             prefix="gnome-terminal --",
+            parameters=[
+                {'up': 'w'},
+                {'down': 's'},
+                {'left': 'a'},
+                {'right': 'd'},
+
+            ]
 
 
         )

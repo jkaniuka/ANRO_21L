@@ -71,10 +71,10 @@ class MyPublisher(Node):
 
 
         # Deklaracja parametrów
-        self.declare_parameter('up', 'w', my_parameter_descriptor_up)
-        self.declare_parameter('down', 's', my_parameter_descriptor_down)
-        self.declare_parameter('left', 'a', my_parameter_descriptor_left)
-        self.declare_parameter('right', 'd', my_parameter_descriptor_right)
+        self.declare_parameter('up', my_parameter_descriptor_up)
+        self.declare_parameter('down', my_parameter_descriptor_down)
+        self.declare_parameter('left', my_parameter_descriptor_left)
+        self.declare_parameter('right', my_parameter_descriptor_right)
 
     def turtle_movement(self):
 
