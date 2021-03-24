@@ -1,27 +1,29 @@
-Nowy plik
+# Anatomia robotów, laboratorium -> semestr 2021L 
+>Prowadzący: mgr inż. Maciej Węgierek  
+>Członkowie zespołu: Jan Kaniuka, Przemysław Krasnodębski  
+>Termin zajęć: czwartki 16:15 - 20:00  
 
-**Wrzuciłem pierwszą wersję programu do sterowania żółwiem**
-- pakiet  nazywa się turtle_keyboard
-- sterowanie odbywa się poprzez bibliotekę konsolową
+![](https://i.pinimg.com/564x/4f/79/3e/4f793ed15bb4d03b2cd5aa5e3ee205b1.jpg)
 
-Uruchamianie:
+## Spis treści
+* [Ogólne](#ogólne)
+* [Laboratorium 1](#Laboratorium-1)
+* [Laboratorium 2](#Laboratorium-2)
+* [Laboratorium 3](#Laboratorium-3)
+* [Laboratorium 4](#Laboratorium-4)
+* [Laboratorium 5](#Laboratorium-5)
 
-W pierwszej konsoli:
 
-. install/setup.bash
-
-ros2 run turtle_keyboard param_talker
-
-W drugiej konsoli trzeba otworzyć turtlesim, domyślnie steruje się w,a,s,d
-
-Progam działa, ale jest problem przy próbie wczytania parametrów:
-
-Otwieram nową konsolę i wpisuję:     . install/setup.bash i potem ros2 param list
-
-Wyskakuje błąd: Exception while calling service of node '/my_publisher_node': None
-
-Nie wiem czemu tak się dzieje :( ; polecenie ros2 node list wykrywa normalnie węzeł.
-Jak problem z tym błędem się rozwiąże to zostaje jeszcze dorobienie pliku .roslauch
+## Ogólne
+Repozytorium zawiera paczki do projektów realizowanych w ramach laboratorium.
 
 
 
+## Laboratorium 1
+* Pakiet ROS2 zawierający program do swobodnego sterowania żółwiem z poziomu konsoli.
+* Możliwośc wyboru klawiszy sterujących poprzez definiowanie parametrów węzła. 
+* Plik roslaunch uruchamiający węzeł żółwia i sterowania.
+* Więcej informacji w [Wiki](https://github.com/pw-eiti-anro-21l/kaniuka_krasnodebski/wiki/Laboratorium-pierwsze).
+
+## Laboratorium 2
+>
