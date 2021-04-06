@@ -37,7 +37,6 @@
 
     <joint name="base_link__link1" type="fixed">
         <axis xyz="0 0 1" />
-        <limit effort="1000.0" lower="-0.8" upper="0.8" velocity="0.5" />
         <origin rpy="${params['row1']['j_rpy']}" xyz="${params['row1']['j_xyz']}"/>
         <parent link="base_link"/>
         <child link="link1"/>
@@ -67,7 +66,6 @@
 
     <joint name="link1__link2" type="fixed">
         <axis xyz="0 0 1" />
-        <limit effort="1000.0" lower="-0.8" upper="0.8" velocity="0.5" />
         <origin rpy="${params['row2']['j_rpy']}" xyz="${params['row2']['j_xyz']}"/>
         <parent link="link1"/>
         <child link="link2"/>
@@ -85,7 +83,6 @@
 
     <joint name="link2__link3" type="fixed">
         <axis xyz="0 0 1" />
-        <limit effort="1000.0" lower="-0.8" upper="0.8" velocity="0.5" />
         <origin rpy="${params['row3']['j_rpy']}" xyz="${params['row3']['j_xyz']}"/>
         <parent link="link2"/>
         <child link="link3"/>
@@ -103,7 +100,6 @@
 
     <joint name="link3__tool" type="fixed">
         <axis xyz="0 0 1" />
-        <limit effort="1000.0" lower="-0.8" upper="0.8" velocity="0.5" />
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <parent link="link3"/>
         <child link="tool"/>
