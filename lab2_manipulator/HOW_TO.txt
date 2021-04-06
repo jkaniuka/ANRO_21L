@@ -1,6 +1,0 @@
-ros2 launch lab2_manipulator demo.launch.py
-
-rviz2 -d ~/anro2/src/kaniuka_krasnodebski/lab2_manipulator/lab2_manipulator/kartman.rviz
-
-                ^
-        ścieżka do zmiany

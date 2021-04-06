@@ -10,9 +10,13 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
 
     urdf_file_name = 'kartman_move.urdf.xacro.xml'
+    rviz_file_name = 'kartman.rviz'
     urdf = os.path.join(
         get_package_share_directory('lab2_manipulator'),
         urdf_file_name)
+    rviz = os.path.join(
+        get_package_share_directory('lab2_manipulator'),
+        rviz_file_name)
     with open(urdf, 'r') as infp:
         robot_desc = infp.read()
 
@@ -35,5 +39,7 @@ def generate_launch_description():
             package='rviz2',
             executable='rviz2',
             name='rviz2',
-            output='screen')
+            output='screen',
+            parameters=[{'use_sim_time': use_sim_time}],
+            arguments=['-d', rviz]),
     ])

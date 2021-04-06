@@ -14,14 +14,15 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('launch/*.py')),
-        (os.path.join('share', package_name), glob('urdf/*'))
+        (os.path.join('share', package_name), glob('urdf/*')),
+        (os.path.join('share', package_name), glob('lab2_manipulator/*.rviz'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='przemek',
     maintainer_email='przemekdaniel@interia.eu',
     description='Wizualizacja manipulatora',
-    license='TODO: License declaration',
+    license='Apache License 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

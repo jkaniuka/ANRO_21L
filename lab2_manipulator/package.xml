@@ -5,7 +5,7 @@
   <version>0.0.0</version>
   <description>Wizualizacja manipulatora</description>
   <maintainer email="przemekdaniel@interia.eu">przemek</maintainer>
-  <license>TODO: License declaration</license>
+  <license>Apache License 2.0</license>
 
   <depend>rclpy</depend>
 
