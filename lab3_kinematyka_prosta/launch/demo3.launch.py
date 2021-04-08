@@ -11,10 +11,9 @@ def generate_launch_description():
 
     urdf_file_name = 'kartman_move.urdf.xacro.xml'
     urdf = os.path.join(
-        get_package_share_directory('lab2_manipulator'),
+        get_package_share_directory('lab3_kinematyka_prosta'),
         urdf_file_name)
-    with open(urdf, 'r') as infp:
-        robot_desc = infp.read()
+
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -22,6 +21,10 @@ def generate_launch_description():
             default_value='false',
             description='Use simulation (Gazebo) clock if true'),
 
+        Node(
+            package='joint_state_publisher',
+            executable='joint_state_publisher',
+            name='joint_state_publisher'),
         Node(
             package='joint_state_publisher_gui',
             executable='joint_state_publisher_gui',
