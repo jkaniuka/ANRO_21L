@@ -16,6 +16,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('launch/*.py')),
         (os.path.join('share', package_name), glob('urdf/*')),
+        (os.path.join('share', package_name), glob('lab3_kinematyka_prosta/*')),
 
     ],
     install_requires=['setuptools'],
@@ -27,7 +28,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'listener = lab3_kinematyka_prosta.NONKDL_DKIN:main',
+            'nonkdl = lab3_kinematyka_prosta.nonkdl_dkin:main',
         ],
     },
 )
