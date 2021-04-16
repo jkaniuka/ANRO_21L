@@ -1,7 +1,10 @@
 from PyKDL import *
 import mathutils
 
-position = [ -0.5345, -0.943, 1.515]
+position = [ -0.3445, -0.3943, 1.75]
+
+
+
 
 print("Creating Robotic Chain")
 
@@ -37,8 +40,5 @@ fk=ChainFkSolverPos_recursive(chain)
 finalFrame=Frame()
 fk.JntToCart(joint_positions,finalFrame)
 print("Rotational Matrix of the final Frame: ")
-print(finalFrame.M)
-
-v =Vector(0,0,-1)
-
+print(finalFrame.M)  
 print("End-effector position: ",finalFrame.p )
