@@ -29,6 +29,7 @@ setup(
     entry_points={
         'console_scripts': [
             'nonkdl = lab3_kinematyka_prosta.nonkdl_dkin:main',
+            'kdl = lab3_kinematyka_prosta.kdl_dkin:main'
         ],
     },
 )
