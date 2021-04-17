@@ -30,14 +30,20 @@ class NonKdl_dkin(Node):
 
     def listener_callback(self, msg):
 
+        # pobranie parametrów DH
         values = readDHfile()
         T = []
 
         for i, mark in enumerate(values.keys()):
 
+            # przypisanie parametrów DH
             a, d, alpha, theta = values[mark]
             a, d, alpha, theta = float(a), float(d), float(alpha), float(theta)
+
             # przekształcenia macierzowe
+            
+            # msg.position[i] jest <= 0, d+msg.position to aktualne wysunięcie danego członu do przodu
+            # względem końca poprzedniego członu
             translation_z = mathutils.Matrix.Translation((0, 0, d+msg.position[i]))
             rotation_z = mathutils.Matrix.Rotation(theta, 4, 'Z')
             translation_x = mathutils.Matrix.Translation((a, 0, 0))
@@ -49,30 +55,35 @@ class NonKdl_dkin(Node):
 
 
         T_02 = T[0] @ T[1] @ T[2] 
+        # wyznaczenie pozycji koncówki
         xyz = T_02.to_translation()
+        # wyznaczenie orientacji końcówki
         rpy = T_02.to_euler()
         qua = rpy.to_quaternion()
         
+        # stworzenie tematu pose_stamped_nonkdl
         qos_profile = QoSProfile(depth=10)
-        pose_publisher = self.create_publisher(PoseStamped, '/pose_stamped', qos_profile)
+        pose_publisher = self.create_publisher(PoseStamped, '/pose_stamped_nonkdl', qos_profile)
 
-
-        poses = PoseStamped()
+        #utworzenie wiadomości
+        pose = PoseStamped()
         now = self.get_clock().now()
-        poses.header.stamp = ROSClock().now().to_msg()
-        poses.header.frame_id = "base_link"
+        pose.header.stamp = ROSClock().now().to_msg()
+        pose.header.frame_id = "base_link"
 
-        poses.pose.position.x = xyz[0]
-        poses.pose.position.y = xyz[1]
-        poses.pose.position.z = xyz[2]+1
-        poses.pose.orientation = Quaternion(w=qua[0], x=qua[1], y=qua[2], z=qua[3])
+        # zapis informacji o pozycji do wiadomości
+        pose.pose.position.x = xyz[0]+0.05
+        pose.pose.position.y = xyz[1]
+        pose.pose.position.z = xyz[2]+1
+        pose.pose.orientation = Quaternion(w=qua[0], x=qua[1], y=qua[2], z=qua[3])
 
+        # publikowanie wiadomości na temacie pose_stamped_nonkdl
         pose_publisher.publish(poses)
 
 
 
+# czytanie parametrów tablicy DH z pliku
 def readDHfile():
-
 
     with open(os.path.join(
         get_package_share_directory('lab3_kinematyka_prosta'),'Tablica_MD-H.json'), 'r') as file:

@@ -77,13 +77,13 @@ class Kdl_dkin(Node):
 		qua = finalFrame.M.GetQuaternion()
 
 		# End-effector position + effector offset in respect to last joint (joint3):
-		tool_offset = Vector(0, 0, -0.1)
+		tool_offset = Vector(0.05, 0, 0)
 		xyz = finalFrame.p + tool_offset
 
 
 		
 		qos_profile = QoSProfile(depth=10)
-		pose_publisher = self.create_publisher(PoseStamped, '/pose_stamped', qos_profile)
+		pose_publisher = self.create_publisher(PoseStamped, '/pose_stamped_kdl', qos_profile)
 
 
 		poses = PoseStamped()
