@@ -78,7 +78,7 @@ class NonKdl_dkin(Node):
         pose.pose.orientation = Quaternion(w=qua[0], x=qua[1], y=qua[2], z=qua[3])
 
         # publikowanie wiadomości na temacie pose_stamped_nonkdl
-        pose_publisher.publish(poses)
+        pose_publisher.publish(pose)
 
 
 
