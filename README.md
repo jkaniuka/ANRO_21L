@@ -31,3 +31,10 @@ Repozytorium zawiera paczki do projektów realizowanych w ramach laboratorium.
 * Dwa pliku URDF definujące wygląd robotów.
 * Dwa pliki roslaunch uruchamiające wizualizacje robota ruchomego oraz nieruchomego.
 * Więcej informacji w [Wiki](https://github.com/pw-eiti-anro-21l/kaniuka_krasnodebski/wiki/Laboratorium-drugie).
+
+## Laboratorium 3
+* Pakiet ROS2 zawierający program do obliczania zadania prostego kinematyki.
+* Analityczne obliczenie pozycji końcówki na podstawie operacji na macierzach przekształcenia jednorodnego. 
+* Obliczenie kinematyki prostej przy użyciu pakietu KDL (Kinematics and Dynamics Library).
+* Porównanie obu rozwiązań w programie RViz2.
+* Więcej informacji w [Wiki](https://github.com/pw-eiti-anro-21l/kaniuka_krasnodebski/wiki/Laboratorium-trzecie).
