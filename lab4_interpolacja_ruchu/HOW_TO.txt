@@ -5,3 +5,29 @@ ros2 launch lab4_interpolacja_ruchu lab3.launch.py
 ros2 run lab4_interpolacja_ruchu nonkdl
 
 ros2 run lab4_interpolacja_ruchu kdl
+
+------------------------------------
+
+Program testowałem "na sucho" korzystając z servisu AddTwoInts.srv z tutoriala
+( w sensie przerabiałem servis z py_srvcli) i wszystko było ok - 
+jak robiłem echo na topicu /joint_states to widać krokowe zmiany pozycji
+w stawach, aż do zadanej pozycji :-)
+
+Żeby nie było tak pięknie to jest problem xD
+Nie udaje się zaimportować tego pliku (Interpolation.srv) zawierającego strukturę komunikacji jest w folderze /srv
+
+Np. ta komenda powinna zwrócić strukturę komunikacji
+ros2 interface show lab4_interpolacja_ruchu/srv/Interpolation
+ale to się nie udaje :-(
+
+W internecie dużo osób dodaje zależność nie tylko do package.xml, ale także do CMake.txt,
+ale nie jestem pewien czy tu leży problem.
+
+Logika jest cała zrobiona, klient także ok.
+
+Wrzucę też linki, z których korzystałem bo mogą się jeszcze przydać:
+https://docs.ros.org/en/foxy/Tutorials/Custom-ROS2-Interfaces.html
+https://answers.ros.org/question/344042/ros2-service-header-files/
+https://roboticsbackend.com/ros2-create-custom-message/
+
+
