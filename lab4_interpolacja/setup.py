@@ -3,7 +3,7 @@ import os
 from glob import glob
 from setuptools import setup
 from setuptools import find_packages
-package_name = 'lab4_interpolacja_ruchu'
+package_name = 'lab4_interpolacja'
 
 setup(
     name=package_name,
@@ -15,26 +15,21 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('launch/*.py')),
         (os.path.join('share', package_name), glob('urdf/*')),
-        (os.path.join('share', package_name), glob('lab3_kinematyka_prosta/*')),
+        (os.path.join('share', package_name), glob('lab4_interpolacja/*')),
         (os.path.join('share', package_name), glob('*.json')),
-        (os.path.join('share', package_name), glob('*.srv')),
-        (os.path.join('share', package_name), glob('srv/*')),
-
-
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='przemek',
     maintainer_email='przemekdaniel@interia.eu',
     description='TODO: Package description',
-    license='TODO: License declaration',
+    license='Apache License 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'nonkdl = lab3_kinematyka_prosta.nonkdl_dkin:main',
-            'kdl = lab3_kinematyka_prosta.kdl_dkin:main'
-            'service = lab4_interpolacja_ruchu.jint_control_srv:main',
-            'client = lab4_interpolacja_ruchu.jint:main'
+            'service = lab4_interpolacja.jint_control_srv:main',
+            'client = lab4_interpolacja.jint:main',
+            'publ = lab4_interpolacja.joint_st_publ_kin:main', 
         ],
     },
 )

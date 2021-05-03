@@ -1,0 +1,30 @@
+colcon build --symlink-install --packages-select lab4_interpolacja
+
+colcon build --symlink-install --packages-select interpolation_interfaces
+
+ros2 launch lab4_interpolacja lab3.launch.py
+
+
+ros2 interface show interpolation_interfaces/srv/Interpolation
+
+ros2 run lab4_interpolacja service
+ros2 run lab4_interpolacja client
+ros2 topic echo /joint_states
+
+Obsluga pierwszej części jest zrobiona(bez niektórych szczegółów i duzych testów)
+
+
+Druga część zadania(w realizacji):
+
+Ogarnąłem już wizualizację, ale nie "ubierałem" tego w serwis póki jest problem z plikiem .srv
+
+Uruchamianie (na razie to sam plik pythona):
+
+1) python3 my_tf_broadcaster.py
+2) można podejrzeć co nadaje : ros2 topic echo /cartesian
+3) rviz2
+po odpaleniu Rviz będzie krzyczał,że nie ma fixed frame, więc musimy dodać - w nowej konsoli trzeba wpisać:
+ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 1 map base_frame
+
+potem w Rviz dodajesz base frame jako fixed frame, następnie Add pose i wybierasz topic cartesian + można dodać tf to wyświetli układ zerowy :-)
+Układ będzie sobie latał w przestrzenii

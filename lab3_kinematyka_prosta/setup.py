@@ -16,7 +16,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('launch/*.py')),
         (os.path.join('share', package_name), glob('urdf/*')),
-        (os.path.join('share', package_name), glob('lab3_kinematyka_prosta/*')),
+        (os.path.join('share', package_name), glob('lab3_kinematyka/*')),
         (os.path.join('share', package_name), glob('*.json')),
 
     ],
@@ -29,8 +29,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'nonkdl = lab3_kinematyka_prosta.nonkdl_dkin:main',
-            'kdl = lab3_kinematyka_prosta.kdl_dkin:main'
+            'nonkdl = lab3_kinematyka.nonkdl_dkin:main',
+            'kdl = lab3_kinematyka.kdl_dkin:main'
         ],
     },
 )

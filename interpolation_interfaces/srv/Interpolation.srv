@@ -2,5 +2,6 @@ float64 joint1_goal
 float64 joint2_goal
 float64 joint3_goal
 float64 time_of_move
+string type
 ---
 string confirmation

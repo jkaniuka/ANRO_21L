@@ -12,10 +12,10 @@ def generate_launch_description():
     urdf_file_name = 'kartman_move.urdf.xacro.xml'
     rviz_file_name = 'kartman.rviz'
     urdf = os.path.join(
-        get_package_share_directory('lab3_kinematyka_prosta'),
+        get_package_share_directory('lab4_interpolacja'),
         urdf_file_name)
     rviz = os.path.join(
-        get_package_share_directory('lab3_kinematyka_prosta'),
+        get_package_share_directory('lab4_interpolacja'),
         rviz_file_name)
 
 
@@ -41,8 +41,4 @@ def generate_launch_description():
             output='screen',
             parameters=[{'use_sim_time': use_sim_time}],
             arguments=['-d', rviz]),
-        Node(
-            package='joint_state_publisher_gui',
-            executable='joint_state_publisher_gui',
-            name='joint_state_publisher_gui')
     ])

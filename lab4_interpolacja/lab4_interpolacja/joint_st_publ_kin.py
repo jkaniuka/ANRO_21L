@@ -9,6 +9,7 @@ from rcl_interfaces.msg import ParameterType
 from rcl_interfaces.msg import ParameterDescriptor
 from rcl_interfaces.msg import ParameterType
 from rcl_interfaces.msg import ParameterValue
+import time
 
 
 class JointStatePublisher(Node):
@@ -38,6 +39,7 @@ class JointStatePublisher(Node):
 
 
     def send_message(self):
+        global x
 
         # Pobranie wartości parametrów
         my_param_joint1 = self.get_parameter('joint1_pose').get_parameter_value()
@@ -57,12 +59,25 @@ class JointStatePublisher(Node):
         # my_param_joint_1 i pozostałe to obiekty klasy ParameterValue
         # Nie bardzo chcą się konwertować, a w joint_state_message muszą być float
         
-        joint_state.position = [0.33 , 1.53 , 0.2342]
+        # for i in range(0, 100):
+
+        #     joint_state.position = [-(i/10), -1.53 , -0.2342]
+        #     time.sleep(1)
+        #     self.joint_pub.publish(joint_state)
+
+        joint_state.position = [x, -1.53 , -0.2342]
+        x = x - 0.1
+
 
         self.joint_pub.publish(joint_state)
 
 
+
+
 def main(args = None):
+    global x
+    x=0.0
+
     rclpy.init(args=args)
 
     joint_state_publisher = JointStatePublisher()
