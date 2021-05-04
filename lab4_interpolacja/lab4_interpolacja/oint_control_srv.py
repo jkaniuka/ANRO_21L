@@ -100,7 +100,7 @@ class MinimalService(Node):
         for i in range(1,steps+1):
 
             qos_profile = QoSProfile(depth=10)
-            pose_publisher = self.create_publisher(PoseStamped, '/pose_stamped_nonkdl', qos_profile)
+            pose_publisher = self.create_publisher(PoseStamped, '/pose_op_interpolation', qos_profile)
             poses = PoseStamped()
             now = self.get_clock().now()
             poses.header.stamp = ROSClock().now().to_msg()
@@ -134,6 +134,10 @@ class MinimalService(Node):
                 frame_pitch = a0_rpy[0] + a2_rpy[0]*(sample_time*i)**2 + a3_rpy[0]*(sample_time*i)**3 
                 frame_yaw = a0_rpy[0] + a2_rpy[0]*(sample_time*i)**2 + a3_rpy[0]*(sample_time*i)**3 
 
+            # Przeliczenie na radiany do funkcji euler2quat
+            frame_roll = frame_roll*math.pi/180
+            frame_pitch = frame_pitch*math.pi/180
+            frame_yaw = frame_yaw*math.pi/180
 
 
 
@@ -142,7 +146,7 @@ class MinimalService(Node):
             # Konwersja z RPY na kwaternion
             ##quaternion = tf.transformations.quaternion_from_euler(frame_roll, frame_pitch, frame_yaw)
             quaternion = transforms3d.euler.euler2quat(frame_roll, frame_pitch, frame_yaw, axes='sxyz')
-            poses.pose.orientation = Quaternion(w=quaternion[3], x=quaternion[0], y=quaternion[1], z=quaternion[2])
+            poses.pose.orientation = Quaternion(w=quaternion[0], x=quaternion[1], y=quaternion[2], z=quaternion[3])
 
 
 
