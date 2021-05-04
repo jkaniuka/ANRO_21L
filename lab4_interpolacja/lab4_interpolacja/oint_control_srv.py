@@ -26,8 +26,8 @@ from sensor_msgs.msg import JointState
 from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
 import time
-import math  
-
+import math 
+import transforms3d
 
 from interpolation_interfaces.srv import OpInterpolation
 
@@ -74,7 +74,7 @@ class MinimalService(Node):
         marker.pose.orientation.z = 1.0
 
         # Wyznaczenie współczynników dla metody wielomianowej
-        if(request.type == 'polynominal'):
+        if(request.type == 'polynomial'):
 
             # Współczynniki dla interpolacji położenia
 
@@ -99,7 +99,8 @@ class MinimalService(Node):
 
         for i in range(1,steps+1):
 
-
+            qos_profile = QoSProfile(depth=10)
+            pose_publisher = self.create_publisher(PoseStamped, '/pose_stamped_nonkdl', qos_profile)
             poses = PoseStamped()
             now = self.get_clock().now()
             poses.header.stamp = ROSClock().now().to_msg()
@@ -139,16 +140,17 @@ class MinimalService(Node):
 
 
             # Konwersja z RPY na kwaternion
-            quaternion = tf.transformations.quaternion_from_euler(frame_roll, frame_pitch, frame_yaw)
+            ##quaternion = tf.transformations.quaternion_from_euler(frame_roll, frame_pitch, frame_yaw)
+            quaternion = transforms3d.euler.euler2quat(frame_roll, frame_pitch, frame_yaw, axes='sxyz')
             poses.pose.orientation = Quaternion(w=quaternion[3], x=quaternion[0], y=quaternion[1], z=quaternion[2])
 
 
 
 
             # Przypisanie wartości dla markerów
-            marker.pose.position.x = 2 - float(joint3_next)
-            marker.pose.position.y = -3 - float(joint2_next)
-            marker.pose.position.z = 2 + float(joint1_next)
+            marker.pose.position.x = poses.pose.position.x
+            marker.pose.position.y = poses.pose.position.y
+            marker.pose.position.z = poses.pose.position.z
 
             
 
@@ -165,7 +167,7 @@ class MinimalService(Node):
 
 
             # Publikowanie pozycji układu współrzędnych
-            self.pose_publisher.publish(poses)
+            pose_publisher.publish(poses)
 
             
 

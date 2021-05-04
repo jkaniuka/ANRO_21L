@@ -26,17 +26,17 @@ class MinimalClientAsync(Node):
             self.req.yaw_goal = float(sys.argv[6])
 
 
-            if(float(sys.argv[4])<=0):
+            if(float(sys.argv[7])<=0):
                 self.get_logger().info('Niepoprawna wartość czasu')
                 raise ValueError("That is not a positive number!")
             else:
-                self.req.time_of_move = float(sys.argv[4])
+                self.req.time_of_move = float(sys.argv[7])
 
-            if(str(sys.argv[5]) !='linear' and str(sys.argv[5]) !='polynominal' ):
+            if(str(sys.argv[8]) !='linear' and str(sys.argv[8]) !='polynomial' ):
                 self.get_logger().info('Zły typ interpolacji ')
                 raise ValueError("That is not a positive number!")
             else:
-                self.req.type = (sys.argv[5])  
+                self.req.type = (sys.argv[8])  
         except IndexError():
             print("Niepoprawna liczba parametrów")
             return
@@ -70,7 +70,7 @@ def main(args=None):
             else:
                 minimal_client.get_logger().info(
                     'Result of interpolation for positions: x = %d , y = %d , z = %d, roll = %d, pitch = %d, yaw = %d in time %d = %s' %
-                    (minimal_client.req.joint1_goal, minimal_client.req.joint2_goal, minimal_client.req.joint3_goal,minimal_client.req.roll_goal, minimal_client.req.pitch_goal, minimal_client.req.yaw_goal minimal_client.req.time_of_move, response.confirmation))
+                    (minimal_client.req.joint1_goal, minimal_client.req.joint2_goal, minimal_client.req.joint3_goal,minimal_client.req.roll_goal, minimal_client.req.pitch_goal, minimal_client.req.yaw_goal, minimal_client.req.time_of_move, response.confirmation))
 
     minimal_client.destroy_node()
     rclpy.shutdown()
