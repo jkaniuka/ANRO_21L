@@ -3,7 +3,11 @@
 # float64 joint1_goal
 # float64 joint2_goal
 # float64 joint3_goal
+# float64 roll_goal
+# float64 pitch_goal
+# float64 yaw_goal
 # float64 time_of_move
+# string type - liniowa/wielomianowa
 # ---
 # string confirmation - na koniec napisze, że komunikacja zakończona
 
@@ -24,7 +28,8 @@ from visualization_msgs.msg import MarkerArray
 import time
 import math  
 
-from interpolation_interfaces.srv import Interpolation
+
+from interpolation_interfaces.srv import OpInterpolation
 
 
 class MinimalService(Node):
@@ -32,12 +37,13 @@ class MinimalService(Node):
 
     def __init__(self):
         super().__init__('minimal_service')
-        self.srv = self.create_service(Interpolation, 'interpolacja', self.interpolation_callback)  
+        self.srv = self.create_service(OpInterpolation, 'interpolacja_op', self.interpolation_callback)  
 
     def interpolation_callback(self, request, response):
 
-        # Pozycje początkowe w stawach
+        # Początkowa pozycja układu współrzędnych (położenie + orientacja)
         start_positions = [0, 0, 0]
+        start_orientation = [0, 0, 0]
                                                
         self.get_logger().info('Incoming request')
 
@@ -69,6 +75,9 @@ class MinimalService(Node):
 
         # Wyznaczenie współczynników dla metody wielomianowej
         if(request.type == 'polynominal'):
+
+            # Współczynniki dla interpolacji położenia
+
             a0 = [start_positions[0], start_positions[1], start_positions[2]]
             a2 = [3*((request.joint1_goal - start_positions[0])/(request.time_of_move)**2),
             3*((request.joint2_goal - start_positions[1])/(request.time_of_move)**2),
@@ -77,35 +86,71 @@ class MinimalService(Node):
             -2*((request.joint2_goal - start_positions[1])/(request.time_of_move)**3),
             -2*((request.joint3_goal - start_positions[2])/(request.time_of_move)**3),]
 
+
+            # Współczynniki dla interpolacji orientacji
+
+            a0_rpy = [start_orientation[0], start_orientation[1], start_orientation[2]]
+            a2_rpy = [3*((request.roll_goal - start_orientation[0])/(request.time_of_move)**2),
+            3*((request.pitch_goal - start_orientation[1])/(request.time_of_move)**2),
+            3*((request.yaw_goal - start_orientation[2])/(request.time_of_move)**2)]
+            a3_rpy= [-2*((request.roll_goal - start_orientation[0])/(request.time_of_move)**3),
+            -2*((request.pitch_goal - start_orientation[1])/(request.time_of_move)**3),
+            -2*((request.yaw_goal - start_orientation[2])/(request.time_of_move)**3),]
+
         for i in range(1,steps+1):
-            
-            # Publisher dla Kartmana
-            qos_profile1 = QoSProfile(depth=10)
-            self.joint_pub = self.create_publisher(JointState, '/joint_states', qos_profile1)
-            joint_state = JointState()
+
+
+            poses = PoseStamped()
             now = self.get_clock().now()
-            joint_state.header.stamp = now.to_msg()
-            joint_state.name = ['base_link__link1', 'link1__link2', 'link2__link3']
+            poses.header.stamp = ROSClock().now().to_msg()
+            poses.header.frame_id = "map"
 
             # Interpolacja liniowa
             if(request.type == 'linear'):
-                joint1_next = start_positions[0] + ((request.joint1_goal - start_positions[0])/request.time_of_move)*sample_time*i
-                joint2_next = start_positions[1] + ((request.joint2_goal - start_positions[1])/request.time_of_move)*sample_time*i
-                joint3_next = start_positions[2] + ((request.joint3_goal - start_positions[2])/request.time_of_move)*sample_time*i
+
+                # Położenie
+                poses.pose.position.x = start_positions[0] + ((request.joint1_goal - start_positions[0])/request.time_of_move)*sample_time*i
+                poses.pose.position.y = start_positions[1] + ((request.joint2_goal - start_positions[1])/request.time_of_move)*sample_time*i
+                poses.pose.position.z = start_positions[2] + ((request.joint3_goal - start_positions[2])/request.time_of_move)*sample_time*i
+
+                # Orientacja w RPY
+                frame_roll = start_orientation[0] + ((request.roll_goal - start_orientation[0])/request.time_of_move)*sample_time*i
+                frame_pitch = start_orientation[1] + ((request.pitch_goal - start_orientation[1])/request.time_of_move)*sample_time*i
+                frame_yaw = start_orientation[2] + ((request.yaw_goal - start_orientation[2])/request.time_of_move)*sample_time*i
+
+                
 
             # interpolacja wielomianowa
             if(request.type == 'polynomial'):
-                joint1_next = a0[0] + a2[0]*(sample_time*i)**2 + a3[0]*(sample_time*i)**3 
-                joint2_next = a0[1] + a2[1]*(sample_time*i)**2 + a3[1]*(sample_time*i)**3 
-                joint3_next = a0[2] + a2[2]*(sample_time*i)**2 + a3[2]*(sample_time*i)**3 
+                # Położenie
+                poses.pose.position.x = a0[0] + a2[0]*(sample_time*i)**2 + a3[0]*(sample_time*i)**3 
+                poses.pose.position.y = a0[1] + a2[1]*(sample_time*i)**2 + a3[1]*(sample_time*i)**3 
+                poses.pose.position.z = a0[2] + a2[2]*(sample_time*i)**2 + a3[2]*(sample_time*i)**3 
+
+
+                # Orientacja RPY
+                frame_roll = a0_rpy[0] + a2_rpy[0]*(sample_time*i)**2 + a3_rpy[0]*(sample_time*i)**3 
+                frame_pitch = a0_rpy[0] + a2_rpy[0]*(sample_time*i)**2 + a3_rpy[0]*(sample_time*i)**3 
+                frame_yaw = a0_rpy[0] + a2_rpy[0]*(sample_time*i)**2 + a3_rpy[0]*(sample_time*i)**3 
+
+
+
+
+
+
+            # Konwersja z RPY na kwaternion
+            quaternion = tf.transformations.quaternion_from_euler(frame_roll, frame_pitch, frame_yaw)
+            poses.pose.orientation = Quaternion(w=quaternion[3], x=quaternion[0], y=quaternion[1], z=quaternion[2])
+
+
+
 
             # Przypisanie wartości dla markerów
             marker.pose.position.x = 2 - float(joint3_next)
             marker.pose.position.y = -3 - float(joint2_next)
             marker.pose.position.z = 2 + float(joint1_next)
 
-            #Przypisanie wartości dla członów robota
-            joint_state.position = [float(joint1_next), float(joint2_next), float(joint3_next)]
+            
 
             # Obsługa tablicy markerów
             markerArray.markers.append(marker)
@@ -119,8 +164,13 @@ class MinimalService(Node):
             self.marker_pub.publish(markerArray)
 
 
-            # Publikowanie połozenia człónów robota
-            self.joint_pub.publish(joint_state)
+            # Publikowanie pozycji układu współrzędnych
+            self.pose_publisher.publish(poses)
+
+            
+
+
+
             time.sleep(sample_time)
 
 

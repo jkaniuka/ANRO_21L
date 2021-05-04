@@ -1,6 +1,10 @@
+Najpierw :
+colcon build --symlink-install --packages-select interpolation_interfaces
+
+Potem dopiero:
 colcon build --symlink-install --packages-select lab4_interpolacja
 
-colcon build --symlink-install --packages-select interpolation_interfaces
+
 
 ros2 launch lab4_interpolacja lab3.launch.py
 
