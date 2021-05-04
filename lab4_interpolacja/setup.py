@@ -30,6 +30,8 @@ setup(
             'service = lab4_interpolacja.jint_control_srv:main',
             'client = lab4_interpolacja.jint:main',
             'publ = lab4_interpolacja.joint_st_publ_kin:main', 
+            'service2 = lab4_interpolacja.oint_control_srv:main',
+            'client2 = lab4_interpolacja.oint:main',
         ],
     },
 )
