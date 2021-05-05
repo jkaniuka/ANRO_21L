@@ -4,14 +4,6 @@ colcon build --symlink-install --packages-select interpolation_interfaces
 Potem dopiero:
 colcon build --symlink-install --packages-select lab4_interpolacja
 
-Aby działała interpolacja w przestrzeni kartezjańskiej trzeba doinstalować bibliotekę pythona:
-pip3 install transforms3d
-( niestety przy przechodzniu z tf w ROS1 na tf2 w ROS2 nie przenieśli modułu transformations :-( )
-
-
-
-
-
 ros2 launch lab4_interpolacja lab3.launch.py
 
 
@@ -23,18 +15,15 @@ ros2 topic echo /joint_states
 
 Obsluga pierwszej części jest zrobiona(bez niektórych szczegółów i duzych testów)
 
-
+------------------------------------------------------------------------------
 Druga część zadania( 90% gotowe ):
-
-
 
 Uruchamianie :
 
 1) budujemy paczkę jak wyżej
-2) odpalamy RViz2
-3) dodajemy bazowego frame'a: ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 1 map base_frame
-4) ros2 run lab4_interpolacja service2
-5) ros2 run lab4_interpolacja client2 [ parametry wywołania ]
-6) W Rviz dodajmy Pose z topikiem /pose_op_interpolation oraz TF aby pokazało układ bazowy
+2) ros2 launch lab4_interpolacja lab4.launch.py
+3) ros2 run lab4_interpolacja service2
+4) ros2 run lab4_interpolacja client2 [ parametry wywołania ]
 
-Ładnie działa - stopniowo porusza się translacyjnie oraz rotacyjnie - można przemyśleć czy na pewno w dobrą stronę / czy układ prawo- czy lewo skętny itd. ale to szczegóły :-)
+
+Ładnie działa - stopniowo porusza się translacyjnie oraz rotacyjnie
