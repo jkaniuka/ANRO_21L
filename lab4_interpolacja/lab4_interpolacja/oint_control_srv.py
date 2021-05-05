@@ -115,6 +115,12 @@ class MinimalService(Node):
             poses.header.stamp = ROSClock().now().to_msg()
             poses.header.frame_id = "map"
 
+            ## Pubisher do RPY (nie kwaternion)
+            pose_publisher_rpy = self.create_publisher(PoseStamped, '/RPY_orientation', qos_profile)
+            poses_rpy = PoseStamped()
+            poses_rpy.header.stamp = ROSClock().now().to_msg()
+            poses_rpy.header.frame_id = "map"
+
             # Interpolacja liniowa
             if(request.type == 'linear'):
 
@@ -140,8 +146,21 @@ class MinimalService(Node):
 
                 # Orientacja RPY
                 frame_roll = a0_rpy[0] + a2_rpy[0]*(sample_time*i)**2 + a3_rpy[0]*(sample_time*i)**3 
-                frame_pitch = a0_rpy[0] + a2_rpy[0]*(sample_time*i)**2 + a3_rpy[0]*(sample_time*i)**3 
-                frame_yaw = a0_rpy[0] + a2_rpy[0]*(sample_time*i)**2 + a3_rpy[0]*(sample_time*i)**3 
+                frame_pitch = a0_rpy[1] + a2_rpy[1]*(sample_time*i)**2 + a3_rpy[1]*(sample_time*i)**3 
+                frame_yaw = a0_rpy[2] + a2_rpy[2]*(sample_time*i)**2 + a3_rpy[2]*(sample_time*i)**3 
+
+
+
+
+            # Wiadomość na topic /RPY_orientation
+            poses_rpy.pose.position.x = poses.pose.position.x
+            poses_rpy.pose.position.y = poses.pose.position.y
+            poses_rpy.pose.position.z = poses.pose.position.z
+            poses_rpy.pose.orientation = Quaternion(w= 0.0, x=frame_roll, y=frame_pitch, z=frame_yaw)
+
+            pose_publisher_rpy.publish(poses_rpy)
+
+
 
             # Przeliczenie na radiany do funkcji euler2quat
             frame_roll = frame_roll*math.pi/180
