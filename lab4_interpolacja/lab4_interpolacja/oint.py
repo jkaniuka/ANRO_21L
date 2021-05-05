@@ -34,14 +34,15 @@ class MinimalClientAsync(Node):
 
             if(str(sys.argv[8]) !='linear' and str(sys.argv[8]) !='polynomial' ):
                 self.get_logger().info('Zły typ interpolacji ')
-                raise ValueError("That is not a positive number!")
+                raise ValueError("That is a wrong type!")
             else:
                 self.req.type = (sys.argv[8])  
-        except IndexError():
+        except IndexError:
             print("Niepoprawna liczba parametrów")
-            return
+            raise Exception()
         except ValueError:
-            return
+            print("Błędne parametry")
+            raise Exception()
             
         self.future = self.cli.call_async(self.req)
 
@@ -55,25 +56,26 @@ def main(args=None):
         minimal_client = MinimalClientAsync()
         minimal_client.send_request()
     except:
-        return
+        print("Anulowanie realizacji zapytania")
+    else:
 
 
-
-    while rclpy.ok():
-        rclpy.spin_once(minimal_client)
-        if minimal_client.future.done():
-            try:
-                response = minimal_client.future.result()
-            except Exception as e:
-                minimal_client.get_logger().info(
-                    'Service call failed %r' % (e,))
-            else:
-                minimal_client.get_logger().info(
-                    'Result of interpolation for positions: x = %d , y = %d , z = %d, roll = %d, pitch = %d, yaw = %d in time %d = %s' %
-                    (minimal_client.req.joint1_goal, minimal_client.req.joint2_goal, minimal_client.req.joint3_goal,minimal_client.req.roll_goal, minimal_client.req.pitch_goal, minimal_client.req.yaw_goal, minimal_client.req.time_of_move, response.confirmation))
-
-    minimal_client.destroy_node()
-    rclpy.shutdown()
+        while rclpy.ok():
+            rclpy.spin_once(minimal_client)
+            if minimal_client.future.done():
+                try:
+                    response = minimal_client.future.result()
+                except Exception as e:
+                    minimal_client.get_logger().info(
+                        'Service call failed %r' % (e,))
+                else:
+                    minimal_client.get_logger().info(
+                        'Result of interpolation for positions: x = %d , y = %d , z = %d, roll = %d, pitch = %d, yaw = %d in time %d = %s' %
+                        (minimal_client.req.joint1_goal, minimal_client.req.joint2_goal, minimal_client.req.joint3_goal,minimal_client.req.roll_goal, minimal_client.req.pitch_goal, minimal_client.req.yaw_goal, minimal_client.req.time_of_move, response.confirmation))
+                    return
+    finally:
+        minimal_client.destroy_node()
+        rclpy.shutdown()
 
 
 if __name__ == '__main__':

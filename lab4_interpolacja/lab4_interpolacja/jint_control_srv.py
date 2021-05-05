@@ -53,6 +53,12 @@ class MinimalService(Node):
         self.marker_pub = self.create_publisher(MarkerArray, '/marker', qos_profile)
         marker = Marker()
         marker.header.frame_id = "/base_link"
+
+        marker.id = 0
+        marker.action = Marker.DELETEALL
+        markerArray.markers.append(marker)
+        self.marker_pub.publish(markerArray)
+        
         marker.type = marker.SPHERE
         marker.action = marker.ADD
         marker.scale.x = 0.05
@@ -68,7 +74,7 @@ class MinimalService(Node):
         marker.pose.orientation.z = 1.0
 
         # Wyznaczenie współczynników dla metody wielomianowej
-        if(request.type == 'polynominal'):
+        if(request.type == 'polynomial'):
             a0 = [start_positions[0], start_positions[1], start_positions[2]]
             a2 = [3*((request.joint1_goal - start_positions[0])/(request.time_of_move)**2),
             3*((request.joint2_goal - start_positions[1])/(request.time_of_move)**2),
@@ -100,7 +106,7 @@ class MinimalService(Node):
                 joint3_next = a0[2] + a2[2]*(sample_time*i)**2 + a3[2]*(sample_time*i)**3 
 
             # Przypisanie wartości dla markerów
-            marker.pose.position.x = 2 - float(joint3_next)
+            marker.pose.position.x = 2 + float(joint3_next)
             marker.pose.position.y = -3 - float(joint2_next)
             marker.pose.position.z = 2 + float(joint1_next)
 

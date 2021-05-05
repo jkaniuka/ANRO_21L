@@ -54,11 +54,20 @@ class MinimalService(Node):
 
         # Obsługa markerów
         markerArray = MarkerArray()
+
+
         qos_profile = QoSProfile(depth=10)
 
-        self.marker_pub = self.create_publisher(MarkerArray, '/marker', qos_profile)
+        self.marker_pub = self.create_publisher(MarkerArray, '/marker_pose', qos_profile)
         marker = Marker()
-        marker.header.frame_id = "/base_link"
+        marker.header.frame_id = "/base_frame"
+
+        marker.id = 0
+        marker.action = Marker.DELETEALL
+        markerArray.markers.append(marker)
+
+        self.marker_pub.publish(markerArray)
+
         marker.type = marker.SPHERE
         marker.action = marker.ADD
         marker.scale.x = 0.05
