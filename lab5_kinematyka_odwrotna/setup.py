@@ -17,6 +17,7 @@ setup(
         (os.path.join('share', package_name), glob('launch/*.py')),
         (os.path.join('share', package_name), glob('urdf/*')),
         (os.path.join('share', package_name), glob('lab4_interpolacja/*')),
+        (os.path.join('share', package_name), glob('lab5_kinematyka_odwrotna/*')),
         (os.path.join('share', package_name), glob('*.json')),
     ],
     install_requires=['setuptools'],
