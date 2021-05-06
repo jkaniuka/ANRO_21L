@@ -25,16 +25,40 @@ class ikin(Node):
 			'/pose_op_interpolation',
 			self.listener_callback,
 			10)
-		self.subscription  # prevent unused variable warning
+		self.subscription  
 
 
 	def listener_callback(self, msg):
-		x=0
-		y=0
-		z=0
+
+		joint1 = msg.position[1]
+		joint2 = msg.position[2]
+		joint3 = msg.position[3]
+
+		d_values_from_DH = []
+
+
+        for i, mark in enumerate(values.keys()):
+
+            # przypisanie parametrów DH
+            a, d, alpha, theta = values[mark]
+            a, d, alpha, theta = float(a), float(d), float(alpha), float(theta)
+            d_values_from_DH.append(d)
+
+
 
 
 		##obsługa kinematyki odwrotnej
+		x = d_values_from_DH[2] - joint3
+		y = -d_values_from_DH[1] + joint2
+		z = d_values_from_DH[0] - joint1
+
+
+		if( not (x < 0 & x > -d_values_from_DH[2])):
+			send_warning()
+		else if(not (y < 0 & y > -d_values_from_DH[1])):
+			send_warning()
+		else if(not (z < 0 & z > -d_values_from_DH[0])):
+			send_warning()
 
 
 
@@ -49,10 +73,26 @@ class ikin(Node):
 		
 		self.joint_pub.publish(joint_state)
 
+	def send_warning(self):
+		self.ikin.get_logger().warn('Nie można przejść do żądanego położenia z podwodu mechanicznych ograniczeń manipulatora')
+
+
+# czytanie parametrów tablicy DH z pliku
+def readDHfile():
+
+    with open(os.path.join(
+        get_package_share_directory('lab4_kinematyka_odwrotna'),'Tablica_MD-H.json'), 'r') as file:
+
+        values = json.loads(file.read())
+
+    return values
 
 
 
 def main(args=None):
+
+	values = readDHfile()
+
 	rclpy.init(args=args)
 
 	ikin = ikin()
