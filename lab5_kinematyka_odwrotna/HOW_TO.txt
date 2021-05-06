@@ -1,0 +1,14 @@
+Najpierw :
+colcon build --symlink-install --packages-select interpolation_interfaces
+
+
+colcon build --symlink-install --packages-select lab5_kinematyka_odwrotna
+
+ros2 launch lab5_kinematyka_odwrotna lab4.launch.py
+
+
+2) ros2 launch lab5_kinematyka_odwrotna lab4.launch.py
+3) ros2 run lab5_kinematyka_odwrotna service2
+4) ros2 run lab5_kinematyka_odwrotna client2 [ parametry wywołania ]
+
+5) ros2 run lab5_kinematyka_odwrotna ikin
