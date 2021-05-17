@@ -4,6 +4,16 @@ import rclpy
 from rclpy.node import Node
 
 
+# Struktura wiadomości
+
+# float64 time_of_move
+# string type 
+# float64 figure_param_a
+# float64 figure_param_b
+# ---
+# string confirmation 
+
+
 class MinimalClientAsync(Node):
 
     def __init__(self):
@@ -16,47 +26,35 @@ class MinimalClientAsync(Node):
     def send_request(self):
         try:
 
-            # Zadane położenie w przestrzeni kartezjańskiej
-
-            # Baza ma wysokość 1m + człon1 też ma 1m
-             if(not(float(sys.argv[1]) >= 1 & float(sys.argv[1])<= 2)):
-                self.get_logger().info('Położenie nieosiągalne')
-                raise ValueError("Position out of range!")
-            else:
-                self.req.x_goal = float(sys.argv[1])
-                
-            # Długość członu 2 to 3m
-            if(not(float(sys.argv[2]) >= -3 & float(sys.argv[2])<=0)):
-                self.get_logger().info('Położenie nieosiągalne')
-                raise ValueError("Position out of range!")
-            else:
-                self.req.y_goal= float(sys.argv[2])
-
-            # Długość członu 3. to 2m
-            if(not(float(sys.argv[3]) >= 0 & float(sys.argv[3]) <= 2)):
-                self.get_logger().info('Położenie nieosiągalne')
-                raise ValueError("Position out of range!")
-            else:
-                self.req.z_goal = float(sys.argv[3])
-
-
-
             # Czas
 
-            if(float(sys.argv[4]) <= 0):
+            if(float(sys.argv[1]) <= 0):
                 self.get_logger().info('Niepoprawna wartość czasu')
                 raise ValueError("That is not a positive number!")
             else:
-                self.req.time_of_move = float(sys.argv[4])
+                self.req.time_of_move = float(sys.argv[1])
 
 
             # Rodzaj trajektorii referencyjnej (prostokąt lub elipsa)
 
-            if(str(sys.argv[5]) !='rectangle' and str(sys.argv[5]) !='ellipse' ):
+            if(str(sys.argv[2]) !='rectangle' and str(sys.argv[2]) !='ellipse' ):
                 self.get_logger().info('Zły typ trajektorii referencyjnej')
                 raise ValueError("That is a wrong type!")
             else:
-                self.req.type = (sys.argv[5])  
+                self.req.type = (sys.argv[2]) 
+
+
+            if(float(sys.argv[3]) <= 0):
+                self.get_logger().info('Niepoprawna wartość parametru a figury')
+                raise ValueError("That is not a positive number!")
+            else:
+                self.req.time_of_move = float(sys.argv[3])
+
+            if(float(sys.argv[4]) <= 0):
+                self.get_logger().info('Niepoprawna wartość parametru b figury')
+                raise ValueError("That is not a positive number!")
+            else:
+                self.req.time_of_move = float(sys.argv[4]) 
         except IndexError:
             print("Niepoprawna liczba parametrów")
             raise Exception()
@@ -90,8 +88,8 @@ def main(args=None):
                         'Service call failed %r' % (e,))
                 else:
                     minimal_client.get_logger().info(
-                        'Result of interpolation for positions: x = %d , y = %d , z = %d, in time %d, trajectory - %d is %s' %
-                        (minimal_client.req.x_goal, minimal_client.req.y_goal, minimal_client.req.z_goal,minimal_client.req.time_of_move, minimal_client.req.type, response.confirmation))
+                        'Result of interpolation in time %d, trajectory type- %d , params a = %d, b= is %s' %
+                        (minimal_client.req.time_of_move, minimal_client.req.type, minimal_client.req.figure_param_a, minimal_client.req.figure_param_b, response.confirmation))
                     return
     finally:
         minimal_client.destroy_node()

@@ -1,10 +1,9 @@
 # Struktura wiadomości
 
-# float64 x_goal
-# float64 y_goal
-# float64 z_goal
 # float64 time_of_move
 # string type 
+# float64 figure_param_a
+# float64 figure_param_b
 # ---
 # string confirmation 
 
@@ -34,13 +33,24 @@ class MinimalService(Node):
 
     def __init__(self):
         super().__init__('minimal_service')
+
+        # Wektor pozycji początkowych w stawach
+        self.start_positions = []
+
         self.srv = self.create_service(OpInterpolation, 'interpolacja_op', self.interpolation_callback)  
+        self.subscribtion = self.create_subscription(JointState, '/joint_states', self.initial_pose_callback, 10)
+
+    def initial_pose_callback(self,msg):
+        # Pobranie pozycji startowej w celu poprawnego rozpoczęcia zadawania trajektorii referencyjnej
+        self.start_positions[0] = msg.position[0]
+        self.start_positions[1] = msg.position[1]
+        self.start_positions[2] = msg.position[2]
 
     def interpolation_callback(self, request, response):
 
         # Początkowa pozycja układu współrzędnych (położenie + orientacja)
-        start_positions = [2, -3, 2]
-        start_orientation = [0, 0, 0]
+        # Orientacja nas nie interesuje ( poza tym jest przecież stała xD )
+        # Początkowa pozycja z subscribera
                                                
         self.get_logger().info('Incoming request')
 
@@ -78,6 +88,76 @@ class MinimalService(Node):
         marker.pose.orientation.x = 1.0
         marker.pose.orientation.y = 1.0
         marker.pose.orientation.z = 1.0
+
+        # Trajektoria prostokąt
+        if(request.type == 'rectangle'):
+
+            # Zadajemy punkty o tej samej współrzędnej x 
+            # Zmienia się tylko y i z 
+
+            # Ty będzie podział na 4 etapy (boki)
+
+
+
+        # Trajektoria elipsa
+        if(request.type == 'ellipse'):
+
+            # Równanie parametryczne elipsy
+            #  x = a*cos(t)
+            #  y = b*sin(t)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         # Wyznaczenie współczynników dla metody wielomianowej
         if(request.type == 'polynomial'):
