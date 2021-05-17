@@ -1,15 +1,12 @@
 # Struktura wiadomości
 
-# float64 joint1_goal
-# float64 joint2_goal
-# float64 joint3_goal
-# float64 roll_goal
-# float64 pitch_goal
-# float64 yaw_goal
+# float64 x_goal
+# float64 y_goal
+# float64 z_goal
 # float64 time_of_move
-# string type - liniowa/wielomianowa
+# string type 
 # ---
-# string confirmation - na koniec napisze, że komunikacja zakończona
+# string confirmation 
 
 
 import rclpy

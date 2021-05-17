@@ -1,0 +1,7 @@
+float64 x_goal
+float64 y_goal
+float64 z_goal
+float64 time_of_move
+string type 
+---
+string confirmation 

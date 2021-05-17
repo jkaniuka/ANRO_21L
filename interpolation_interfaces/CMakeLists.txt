@@ -30,6 +30,7 @@ if(BUILD_TESTING)
 
   "srv/Interpolation.srv"
   "srv/OpInterpolation.srv"
+  "srv/OpInvKin.srv"
   )
   
   # the following line skips the linter which checks for copyrights
