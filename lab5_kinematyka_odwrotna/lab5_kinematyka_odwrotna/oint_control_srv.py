@@ -42,7 +42,7 @@ class MinimalService(Node):
     def interpolation_callback(self, request, response):
 
         # Początkowa pozycja układu współrzędnych (położenie + orientacja)
-        start_positions = [0, 0, 0]
+        start_positions = [2, -3, 2]
         start_orientation = [0, 0, 0]
                                                
         self.get_logger().info('Incoming request')
@@ -60,7 +60,7 @@ class MinimalService(Node):
 
         self.marker_pub = self.create_publisher(MarkerArray, '/marker_pose', qos_profile)
         marker = Marker()
-        marker.header.frame_id = "/base_frame"
+        marker.header.frame_id = "base_link"
 
         marker.id = 0
         marker.action = Marker.DELETEALL
@@ -113,21 +113,21 @@ class MinimalService(Node):
             poses = PoseStamped()
             now = self.get_clock().now()
             poses.header.stamp = ROSClock().now().to_msg()
-            poses.header.frame_id = "map"
+            poses.header.frame_id = "/base_link"
 
             ## Pubisher do RPY (nie kwaternion)
             pose_publisher_rpy = self.create_publisher(PoseStamped, '/RPY_orientation', qos_profile)
             poses_rpy = PoseStamped()
             poses_rpy.header.stamp = ROSClock().now().to_msg()
-            poses_rpy.header.frame_id = "map"
+            poses_rpy.header.frame_id = "/base_link"
 
             # Interpolacja liniowa
             if(request.type == 'linear'):
 
                 # Położenie
-                poses.pose.position.x = start_positions[0] + ((request.joint1_goal - start_positions[0])/request.time_of_move)*sample_time*i
-                poses.pose.position.y = start_positions[1] + ((request.joint2_goal - start_positions[1])/request.time_of_move)*sample_time*i
-                poses.pose.position.z = start_positions[2] + ((request.joint3_goal - start_positions[2])/request.time_of_move)*sample_time*i
+                poses.pose.position.x =start_positions[0] + ((request.joint1_goal - start_positions[0])/request.time_of_move)*sample_time*i
+                poses.pose.position.y =start_positions[1] + ((request.joint2_goal - start_positions[1])/request.time_of_move)*sample_time*i
+                poses.pose.position.z =start_positions[2] + ((request.joint3_goal - start_positions[2])/request.time_of_move)*sample_time*i
 
                 # Orientacja w RPY
                 frame_roll = start_orientation[0] + ((request.roll_goal - start_orientation[0])/request.time_of_move)*sample_time*i

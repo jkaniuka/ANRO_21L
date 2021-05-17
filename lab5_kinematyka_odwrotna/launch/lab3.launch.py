@@ -34,6 +34,9 @@ def generate_launch_description():
                 'use_sim_time': use_sim_time,
                 'robot_description': Command(['xacro', ' ', urdf])
             }]),
+            # Node(package = "tf2_ros", 
+            # executable = "static_transform_publisher",
+            # arguments = ['0', '0', '0', '0', '0', '0', '1', 'map', 'base_frame']),
         Node(
             package='rviz2',
             executable='rviz2',

@@ -15,10 +15,11 @@ import yaml
 
 
 
-class ikin(Node):
+class Ikin(Node):
 
 	def __init__(self):
 		super().__init__('ikin')
+		self.values = readDHfile()
 
 		self.subscription = self.create_subscription(
 			PoseStamped(),
@@ -27,38 +28,52 @@ class ikin(Node):
 			10)
 		self.subscription  
 
+	def send_warning(self):
+		self.ikin.get_logger().warn('Nie można przejść do żądanego położenia z podwodu mechanicznych ograniczeń manipulatora')
+
+
 
 	def listener_callback(self, msg):
 
-		joint1 = msg.position[1]
-		joint2 = msg.position[2]
-		joint3 = msg.position[3]
+		joint1 = msg.pose.position.z
+		joint2 = msg.pose.position.y
+		joint3 = msg.pose.position.x
+		print("joint1: ", joint1)
+		print("joint2: ", joint2)
+		print("joint3: ", joint3)
 
 		d_values_from_DH = []
 
 
-        for i, mark in enumerate(values.keys()):
+		for i, mark in enumerate(self.values.keys()):
+			print(mark)
 
             # przypisanie parametrów DH
-            a, d, alpha, theta = values[mark]
-            a, d, alpha, theta = float(a), float(d), float(alpha), float(theta)
-            d_values_from_DH.append(d)
+			a, d, alpha, theta = self.values[mark]
+			a, d, alpha, theta = float(a), float(d), float(alpha), float(theta)
+			d_values_from_DH.append(d)
 
 
 
 
 		##obsługa kinematyki odwrotnej
-		x = d_values_from_DH[2] - joint3
-		y = -d_values_from_DH[1] + joint2
-		z = d_values_from_DH[0] - joint1
+		x =  joint3 -2
+		y =  -(joint2 +3) 
+		z =  joint1 -2
+		print("x",x)
+		print("y", y)
+		print("z", z)
 
 
-		if( not (x < 0 & x > -d_values_from_DH[2])):
-			send_warning()
-		else if(not (y < 0 & y > -d_values_from_DH[1])):
-			send_warning()
-		else if(not (z < 0 & z > -d_values_from_DH[0])):
-			send_warning()
+		if( not ((x < 0) & (x > -d_values_from_DH[2]))):
+			print("błąd")
+			# send_warning()
+		elif(not ((y < 0) & (y > -d_values_from_DH[1]))):
+			print("błąd")
+			# send_warning()
+		elif(not ((z < 0) & (z > -d_values_from_DH[0]))):
+			print("błąd")
+			# send_warning()
 
 
 
@@ -72,16 +87,14 @@ class ikin(Node):
 		joint_state.position = [x, y, z]
 		
 		self.joint_pub.publish(joint_state)
-
-	def send_warning(self):
-		self.ikin.get_logger().warn('Nie można przejść do żądanego położenia z podwodu mechanicznych ograniczeń manipulatora')
+		print("publik")
 
 
 # czytanie parametrów tablicy DH z pliku
 def readDHfile():
 
     with open(os.path.join(
-        get_package_share_directory('lab4_kinematyka_odwrotna'),'Tablica_MD-H.json'), 'r') as file:
+        get_package_share_directory('lab5_kinematyka_odwrotna'),'Tablica_MD-H.json'), 'r') as file:
 
         values = json.loads(file.read())
 
@@ -91,11 +104,11 @@ def readDHfile():
 
 def main(args=None):
 
-	values = readDHfile()
+	
 
 	rclpy.init(args=args)
 
-	ikin = ikin()
+	ikin = Ikin()
 	rclpy.spin(ikin)
 
 	ikin.destroy_node()

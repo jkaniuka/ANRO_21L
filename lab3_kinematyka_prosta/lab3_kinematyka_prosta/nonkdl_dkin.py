@@ -33,7 +33,7 @@ class NonKdl_dkin(Node):
     def listener_callback(self, msg):
 
         # pobranie parametrów DH
-        values = readDHfile()
+        values = readDHfile() # zmienić
         T = []
 
         for i, mark in enumerate(values.keys()):

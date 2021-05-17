@@ -16,7 +16,6 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('launch/*.py')),
         (os.path.join('share', package_name), glob('urdf/*')),
-        (os.path.join('share', package_name), glob('lab4_interpolacja/*')),
         (os.path.join('share', package_name), glob('lab5_kinematyka_odwrotna/*')),
         (os.path.join('share', package_name), glob('*.json')),
     ],
@@ -29,11 +28,11 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'service = lab4_interpolacja.jint_control_srv:main',
-            'client = lab4_interpolacja.jint:main',
-            'publ = lab4_interpolacja.joint_st_publ_kin:main', 
-            'service2 = lab4_interpolacja.oint_control_srv:main',
-            'client2 = lab4_interpolacja.oint:main',
+            'service = lab5_kinematyka_odwrotna.jint_control_srv:main',
+            'client = lab5_kinematyka_odwrotna.jint:main',
+            'publ = lab5_kinematyka_odwrotna.joint_st_publ_kin:main', 
+            'service2 = lab5_kinematyka_odwrotna.oint_control_srv:main',
+            'client2 = lab5_kinematyka_odwrotna.oint:main',
             'ikin = lab5_kinematyka_odwrotna.ikin:main'
         ],
     },

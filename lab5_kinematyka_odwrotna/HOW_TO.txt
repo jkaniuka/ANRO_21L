@@ -4,7 +4,7 @@ colcon build --symlink-install --packages-select interpolation_interfaces
 
 colcon build --symlink-install --packages-select lab5_kinematyka_odwrotna
 
-ros2 launch lab5_kinematyka_odwrotna lab4.launch.py
+ros2 launch lab5_kinematyka_odwrotna lab3.launch.py
 
 
 2) ros2 launch lab5_kinematyka_odwrotna lab4.launch.py
