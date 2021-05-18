@@ -31,6 +31,10 @@ class Ikin(Node):
 			10)
 		self.subscription  
 
+		self.last_x_val = 0
+		self.last_y_val = 0
+		self.last_z_val = 0
+
 
 
 
@@ -44,9 +48,9 @@ class Ikin(Node):
 		joint1 = msg.pose.position.z
 		joint2 = msg.pose.position.y
 		joint3 = msg.pose.position.x
-		print("joint1: ", joint1)
-		print("joint2: ", joint2)
-		print("joint3: ", joint3)
+		#print("joint1: ", joint1)
+		#print("joint2: ", joint2)
+		#print("joint3: ", joint3)
 
 		d_values_from_DH = []
 		# Obsługa markerów
@@ -75,7 +79,7 @@ class Ikin(Node):
 
 
 		for i, mark in enumerate(self.values.keys()):
-			print(mark)
+			#print(mark)
 
             # przypisanie parametrów DH
 			a, d, alpha, theta = self.values[mark]
@@ -94,43 +98,45 @@ class Ikin(Node):
 		print("z", z)
 
 
-		if( not ((x < 0) & (x > -d_values_from_DH[2]))):
-			self.get_logger().warn("Position is out of range")
-		elif(not ((y < 0) & (y > -d_values_from_DH[1]))):
-			self.get_logger().warn("Position is out of range")
-		elif(not ((z < 0) & (z > -d_values_from_DH[0]))):
-			self.get_logger().warn("Position is out of range")
-
-
-
-
 		qos_profile = QoSProfile(depth=10)
 		self.joint_pub = self.create_publisher(JointState, '/joint_states', qos_profile)
 		joint_state = JointState()
 		now = self.get_clock().now()
 		joint_state.header.stamp = now.to_msg()
 		joint_state.name = ['base_link__link1', 'link1__link2', 'link2__link3']
-		joint_state.position = [z, y, x]
-		
-		self.joint_pub.publish(joint_state)
 
 
-		# Przypisanie wartości dla markerów
-		marker.pose.position.x = 2 + float(x)
-		marker.pose.position.y = -3 - float(y)
-		marker.pose.position.z = 2 + float(z)
+		if( not ((x <= 0) & (x >= -d_values_from_DH[2])) or 
+			not ((y <= 0) & (y >= -d_values_from_DH[1])) or
+			not ((z <= 0) & (z >= -d_values_from_DH[0]))):
+			self.get_logger().warn("Position is out of range")
+			joint_state.position = [float(self.last_z_val), float(self.last_y_val), float(self.last_x_val)]
+			self.joint_pub.publish(joint_state)
+		else:
+			joint_state.position = [z, y, x]
+			self.last_x_val = x
+			self.last_y_val = y
+			self.last_z_val = z
+			
+			self.joint_pub.publish(joint_state)
 
-		# Obsługa tablicy markerów
-		self.markerArray.markers.append(marker)
 
-		id = 0
-		for m in self.markerArray.markers:
-			m.id = id
-			id += 1
+			# Przypisanie wartości dla markerów
+			marker.pose.position.x = 2 + float(x)
+			marker.pose.position.y = -3 - float(y)
+			marker.pose.position.z = 2 + float(z)
 
-		#Publikowanie tablicy markerów
-		self.marker_pub.publish(self.markerArray)
-		print("publik")
+			# Obsługa tablicy markerów
+			self.markerArray.markers.append(marker)
+
+			id = 0
+			for m in self.markerArray.markers:
+				m.id = id
+				id += 1
+
+			#Publikowanie tablicy markerów
+			self.marker_pub.publish(self.markerArray)
+			print("publik")
 
 
 # czytanie parametrów tablicy DH z pliku
