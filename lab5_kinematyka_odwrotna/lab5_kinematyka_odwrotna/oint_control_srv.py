@@ -119,6 +119,7 @@ class MinimalService(Node):
                         poses.pose.position.y = start_positions[1] + ((-3+request.figure_param_a - start_positions[1])/(request.time_of_move/4))*sample_time*i
                         last_y = poses.pose.position.y
                         poses.pose.position.z = float(last_z)
+                        print(i)
 
 
                     if i >= j and i < j+k:
@@ -126,15 +127,19 @@ class MinimalService(Node):
 
                         poses.pose.position.z = start_positions[2] + ((2-request.figure_param_b  - start_positions[2])/(request.time_of_move/4))*sample_time*(i-j)
                         last_z = poses.pose.position.z
+                        print(i-j)
                     if i >= j+k and i < 2*j+k:
                         poses.pose.position.z = float(last_z)
 
-                        poses.pose.position.y = last_y + ((-3)/(request.time_of_move/4))*sample_time*(i-j-k)
+                        poses.pose.position.y = start_positions[1]+request.figure_param_a - ((-3 - start_positions[1]+request.figure_param_a)/(request.time_of_move/4))*sample_time*(i-j-k)
                         last_y = poses.pose.position.y
+                        print(i-j-k)
                     if i >= j+k+j:
-                        poses.pose.position.z = float(last_z)
+                        poses.pose.position.y = float(last_y)
 
-                        poses.pose.position.z = last_z + ((2  - last_y)/(request.time_of_move/4))*sample_time*(i-j-k-j)
+                        poses.pose.position.z = start_positions[2]-request.figure_param_b  - ((2  - start_positions[2]-request.figure_param_b)/(request.time_of_move/4))*sample_time*(i-j-k-j)
+                        last_z = poses.pose.position.z
+                        print(i-j-k-j)
 
                                 # Przypisanie wartości dla markerów
                     marker.pose.position.x = poses.pose.position.x
