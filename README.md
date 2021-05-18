@@ -45,3 +45,10 @@ Repozytorium zawiera paczki do projektów realizowanych w ramach laboratorium.
 * Implementacja dwóch rodzajów interpolacji: liniowej i wielomianem 3-go stopnia.
 * Wizualizacja wyników w programie Rviz.
 * Więcej informacji w [Wiki](https://github.com/pw-eiti-anro-21l/kaniuka_krasnodebski/wiki/Laboratorium-czwarte).
+
+## Laboratorium 5
+* Pakiet ROS2 zawierający program rozwiązujący zadanie kinematyki odwrotnej manipulatora.
+* Testy śledzenia trajektorii testowej o kształcie prostokąta oraz elipsy.
+* Uwzględnienie ograniczeń konstrukcyjnych manipulatora przy rozwiązywaniu OZK.
+* Wizualizacja wyników w programie Rviz.
+* Więcej informacji w [Wiki](https://github.com/pw-eiti-anro-21l/kaniuka_krasnodebski/wiki/Laboratorium-pi%C4%85te).
