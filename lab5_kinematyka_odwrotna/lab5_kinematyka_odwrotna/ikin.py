@@ -86,10 +86,10 @@ class Ikin(Node):
 
 
 		##obsługa kinematyki odwrotnej
-		x =  joint3 -2
-		y =  -(joint2 +3) 
-		z =  joint1 -2
-		print("x",x)
+		x =  joint3 -d_values_from_DH[2]
+		y =  -(joint2 + d_values_from_DH[1]) 
+		z =  joint1 - d_values_from_DH[0] - 1
+		print("x", x)
 		print("y", y)
 		print("z", z)
 

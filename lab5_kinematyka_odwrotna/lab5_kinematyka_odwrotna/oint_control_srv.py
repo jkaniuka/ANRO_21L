@@ -23,6 +23,7 @@ from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
 import time
 import math 
+import json
 import transforms3d
 
 from interpolation_interfaces.srv import OpInvKin
@@ -32,6 +33,7 @@ class MinimalService(Node):
 
     def __init__(self):
         super().__init__('minimal_service')
+        self.values = readDHfile()
 
         # Wektor pozycji początkowych w stawach
         # self.start_positions = [2, -3, 2]
@@ -50,6 +52,14 @@ class MinimalService(Node):
         last_x = start_positions[0]
         last_y = start_positions[1]
         last_z = start_positions[2]
+
+        d_values_from_DH = []
+
+        for i, mark in enumerate(self.values.keys()):
+            # przypisanie parametrów DH
+            a, d, alpha, theta = self.values[mark]
+            a, d, alpha, theta = float(a), float(d), float(alpha), float(theta)
+            d_values_from_DH.append(d)
 
         # Początkowa pozycja układu współrzędnych (położenie + orientacja)
         # Orientacja nas nie interesuje ( poza tym jest przecież stała xD )
@@ -116,7 +126,7 @@ class MinimalService(Node):
                     poses.pose.position.x = float(last_x)
 
                     if i < j:
-                        poses.pose.position.y = start_positions[1] + ((-3+request.figure_param_a - start_positions[1])/(request.time_of_move/(steps/j)))*sample_time*i
+                        poses.pose.position.y = start_positions[1] + ((-d_values_from_DH[1]+request.figure_param_a - start_positions[1])/(request.time_of_move/(steps/j)))*sample_time*i
                         last_y = poses.pose.position.y
                         poses.pose.position.z = float(last_z)
                         print(i)
@@ -125,19 +135,19 @@ class MinimalService(Node):
                     if i >= j and i <= j+k:
                         poses.pose.position.y = float(last_y)
 
-                        poses.pose.position.z = start_positions[2] + ((2-request.figure_param_b  - start_positions[2])/(request.time_of_move/(steps/k)))*sample_time*(i-j)
+                        poses.pose.position.z = start_positions[2] + (((d_values_from_DH[0]+1)-request.figure_param_b  - start_positions[2])/(request.time_of_move/(steps/k)))*sample_time*(i-j)
                         last_z = poses.pose.position.z
                         print(i-j)
                     if i > j+k and i < 2*j+k:
                         poses.pose.position.z = float(last_z)
 
-                        poses.pose.position.y = start_positions[1]+request.figure_param_a - ((-3 - start_positions[1]+request.figure_param_a)/(request.time_of_move/(steps/j)))*sample_time*(i-j-k)
+                        poses.pose.position.y = start_positions[1]+request.figure_param_a - ((-d_values_from_DH[1] - start_positions[1]+request.figure_param_a)/(request.time_of_move/(steps/j)))*sample_time*(i-j-k)
                         last_y = poses.pose.position.y
                         print(i-j-k)
                     if i >= j+k+j and i <= 2*j+2*k:
                         poses.pose.position.y = float(last_y)
 
-                        poses.pose.position.z = start_positions[2]-request.figure_param_b  - ((2  - start_positions[2]-request.figure_param_b)/(request.time_of_move/(steps/k)))*sample_time*(i-j-k-j)
+                        poses.pose.position.z = start_positions[2]-request.figure_param_b  - (((d_values_from_DH[0]+1)  - start_positions[2]-request.figure_param_b)/(request.time_of_move/(steps/k)))*sample_time*(i-j-k-j)
                         last_z = poses.pose.position.z
                         print(i-j-k-j)
 
@@ -171,13 +181,6 @@ class MinimalService(Node):
 
                     time.sleep(sample_time)
             
-            # Zadajemy punkty o tej samej współrzędnej x 
-            # Zmienia się tylko y i z 
-
-            # Ty będzie podział na 4 etapy (boki)
-
-
-
         # Trajektoria elipsa
         if request.type == 'ellipse':
             pass
@@ -192,7 +195,15 @@ class MinimalService(Node):
         response.confirmation = 'Interpolacja zakończona'
         return response
 
+# czytanie parametrów tablicy DH z pliku
+def readDHfile():
 
+    with open(os.path.join(
+        get_package_share_directory('lab5_kinematyka_odwrotna'),'Tablica_MD-H.json'), 'r') as file:
+
+        values = json.loads(file.read())
+
+    return values
 
 
 
