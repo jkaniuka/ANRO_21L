@@ -33,7 +33,8 @@ setup(
             'publ = lab5_kinematyka_odwrotna.joint_st_publ_kin:main', 
             'service2 = lab5_kinematyka_odwrotna.oint_control_srv:main',
             'client2 = lab5_kinematyka_odwrotna.oint:main',
-            'ikin = lab5_kinematyka_odwrotna.ikin:main'
+            'ikin = lab5_kinematyka_odwrotna.ikin:main',
+            'kdl = lab5_kinematyka_odwrotna.kdl:main'
         ],
     },
 )

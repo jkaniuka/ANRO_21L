@@ -9,3 +9,27 @@ ros2 run lab5_kinematyka_odwrotna service2
 ros2 run lab5_kinematyka_odwrotna client2 [ parametry wywołania ]
 
 ros2 run lab5_kinematyka_odwrotna ikin
+
+ros2 run lab5_kinematyka_odwrotna kdl - w celach porównawczych
+
+---------------------------
+
+Zrobione:
+
+- dodana elipsa
+- działają WARNy w ROSLog
+- kiedy robot nie może osiągnąć kolejnej pozycji, zostaje w ostatniej dopuszczalnej i nie publikuje nowej
+- dodanie markera do końcówki robota ( w celu porównania z trajektorią referencyjną)
+(niestety ale marker KDL zaznacza pozycję w dziwnym miejscu, szukałem przyczyczyny ale po trzecim wywaleniu maszyny wirtualnej odpuściłem xD)
+
+
+---------------------------
+
+Do zrobienia (lecę wg. Moodle i notatek):
+
+- wypada chyba uwzględnić offset na końcówkę,
+- działanie niezależne od położenia początkowego 
+- dodanie węzła do zadawania położenia początkowego (interpolacja z lab 4)
+- przebiegi z RQT
+- zmiana koloru kiedy robot nie może osiągnąć zadanego położenia
+- Wiki/ReadMe już powstają :)

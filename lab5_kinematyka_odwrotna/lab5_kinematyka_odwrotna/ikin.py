@@ -78,6 +78,7 @@ class Ikin(Node):
 
 
 
+
 		for i, mark in enumerate(self.values.keys()):
 			#print(mark)
 
@@ -113,6 +114,7 @@ class Ikin(Node):
 			joint_state.position = [float(self.last_z_val), float(self.last_y_val), float(self.last_x_val)]
 			self.joint_pub.publish(joint_state)
 		else:
+
 			joint_state.position = [z, y, x]
 			self.last_x_val = x
 			self.last_y_val = y
