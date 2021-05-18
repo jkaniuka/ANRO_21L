@@ -18,10 +18,10 @@ class MinimalClientAsync(Node):
 
     def __init__(self):
         super().__init__('minimal_client_async')
-        self.cli = self.create_client(OpInterpolation, 'interpolacja_op')
+        self.cli = self.create_client(OpInvKin, 'interpolacja_op')
         while not self.cli.wait_for_service(timeout_sec=2.0):
             self.get_logger().info('service not available, waiting again...')
-        self.req = OpInterpolation.Request()
+        self.req = OpInvKin.Request()
 
     def send_request(self):
         try:
@@ -48,13 +48,13 @@ class MinimalClientAsync(Node):
                 self.get_logger().info('Niepoprawna wartość parametru a figury')
                 raise ValueError("That is not a positive number!")
             else:
-                self.req.time_of_move = float(sys.argv[3])
+                self.req.figure_param_a = float(sys.argv[3])
 
             if(float(sys.argv[4]) <= 0):
                 self.get_logger().info('Niepoprawna wartość parametru b figury')
                 raise ValueError("That is not a positive number!")
             else:
-                self.req.time_of_move = float(sys.argv[4]) 
+                self.req.figure_param_b = float(sys.argv[4]) 
         except IndexError:
             print("Niepoprawna liczba parametrów")
             raise Exception()
@@ -73,8 +73,9 @@ def main(args=None):
 
         minimal_client = MinimalClientAsync()
         minimal_client.send_request()
-    except:
+    except Exception as e:
         print("Anulowanie realizacji zapytania")
+        print()
     else:
 
 
@@ -88,7 +89,7 @@ def main(args=None):
                         'Service call failed %r' % (e,))
                 else:
                     minimal_client.get_logger().info(
-                        'Result of interpolation in time %d, trajectory type- %d , params a = %d, b= is %s' %
+                        'Result of interpolation in time %d, trajectory type- %s , params a = %d, b= %d is %s' %
                         (minimal_client.req.time_of_move, minimal_client.req.type, minimal_client.req.figure_param_a, minimal_client.req.figure_param_b, response.confirmation))
                     return
     finally:

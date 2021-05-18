@@ -35,9 +35,9 @@ class Ikin(Node):
 
 	def listener_callback(self, msg):
 
-		joint1 = msg.pose.position.z
+		joint1 = msg.pose.position.x
 		joint2 = msg.pose.position.y
-		joint3 = msg.pose.position.x
+		joint3 = msg.pose.position.z
 		print("joint1: ", joint1)
 		print("joint2: ", joint2)
 		print("joint3: ", joint3)
