@@ -95,14 +95,11 @@ class Ikin(Node):
 
 
 		if( not ((x < 0) & (x > -d_values_from_DH[2]))):
-			print("błąd")
-			# send_warning()
+			self.get_logger().warn("Position is out of range")
 		elif(not ((y < 0) & (y > -d_values_from_DH[1]))):
-			print("błąd")
-			# send_warning()
+			self.get_logger().warn("Position is out of range")
 		elif(not ((z < 0) & (z > -d_values_from_DH[0]))):
-			print("błąd")
-			# send_warning()
+			self.get_logger().warn("Position is out of range")
 
 
 

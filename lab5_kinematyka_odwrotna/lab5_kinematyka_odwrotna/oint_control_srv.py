@@ -183,11 +183,52 @@ class MinimalService(Node):
             
         # Trajektoria elipsa
         if request.type == 'ellipse':
-            pass
 
-            # Równanie parametryczne elipsy
-            #  x = a*cos(t)
-            #  y = b*sin(t)
+
+
+            while(True):
+
+
+                for i in range(1,steps+1):
+                    qos_profile = QoSProfile(depth=10)
+                    pose_publisher = self.create_publisher(PoseStamped, '/pose_op_interpolation', qos_profile)
+                    poses = PoseStamped()
+                    now = self.get_clock().now()
+                    poses.header.stamp = ROSClock().now().to_msg()
+                    poses.header.frame_id = "/base_link"
+
+                    poses.pose.position.x = float(last_x)
+                    poses.pose.position.y = start_positions[1] + request.figure_param_a*math.cos(2 * math.pi * (1/request.time_of_move) * sample_time * i)
+                    poses.pose.position.z = start_positions[2] + request.figure_param_b*math.sin(2 * math.pi * (1/request.time_of_move) * sample_time * i)
+
+
+                    
+
+
+                    # Przypisanie wartości dla markerów
+                    marker.pose.position.x = poses.pose.position.x
+                    marker.pose.position.y = poses.pose.position.y
+                    marker.pose.position.z = poses.pose.position.z
+
+                    
+
+                    # Obsługa tablicy markerów
+                    markerArray.markers.append(marker)
+
+                    id = 0
+                    for m in markerArray.markers:
+                        m.id = id
+                        id += 1
+
+                    #Publikowanie tablicy markerów
+                    self.marker_pub.publish(markerArray)
+
+
+                    # Publikowanie pozycji układu współrzędnych
+                    pose_publisher.publish(poses)
+
+
+                    time.sleep(sample_time)
 
 
 
