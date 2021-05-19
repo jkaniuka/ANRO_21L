@@ -10,7 +10,14 @@ ros2 run lab5_kinematyka_odwrotna client2 [ parametry wywołania ]
 
 ros2 run lab5_kinematyka_odwrotna ikin
 
-ros2 run lab5_kinematyka_odwrotna kdl - w celach porównawczych
+ros2 run lab5_kinematyka_odwrotna kdl - w celach porównawczych -> zaznacza trajektorię końcówki
+
+
+# Wstępne ustawienie robota (poprzez interpolację)
+ros2 run lab5_kinematyka_odwrotna service
+ros2 run lab5_kinematyka_odwrotna client [ parametry wywołania ]
+
+
 
 ---------------------------
 
@@ -19,8 +26,11 @@ Zrobione:
 - dodana elipsa
 - działają WARNy w ROSLog
 - kiedy robot nie może osiągnąć kolejnej pozycji, zostaje w ostatniej dopuszczalnej i nie publikuje nowej
+- gotowe ReadMe
+- dodanie węzła do zadawania położenia początkowego (interpolacja z lab 4)
 - dodanie markera do końcówki robota ( w celu porównania z trajektorią referencyjną)
-(niestety ale marker KDL zaznacza pozycję w dziwnym miejscu, szukałem przyczyczyny ale po trzecim wywaleniu maszyny wirtualnej odpuściłem xD)
+( wyświetla zielone sześciany w miejscach, gdzie robot faktycznie się porusza - w RViz2 trzeba dodać Marker Array '/marker_KDL')
+- teroretyczna część WIKI ( brakuje między innymi rqt i screena ze śledzenia trajektorii)
 
 
 ---------------------------
@@ -28,8 +38,18 @@ Zrobione:
 Do zrobienia (lecę wg. Moodle i notatek):
 
 - wypada chyba uwzględnić offset na końcówkę,
-- działanie niezależne od położenia początkowego 
-- dodanie węzła do zadawania położenia początkowego (interpolacja z lab 4)
+- przy zaznaczaniu pozycji końcówki trzeba zrobić tak, aby trajektoria była czerwona jak robot się nie porusza / nie może osiągnąć zadanego położenia (zielona już jest)
 - przebiegi z RQT
-- zmiana koloru kiedy robot nie może osiągnąć zadanego położenia
-- Wiki/ReadMe już powstają :)
+- działanie niezależne od położenia początkowego 
+KONCEPCJA:
+ - dodatkowy callback dla subscribera, który wywoła się raz (dodanie np. flagi) i zczyta joint_states do parametrów (self)
+
+
+
+
+
+
+
+
+
+

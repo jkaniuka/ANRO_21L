@@ -54,9 +54,9 @@ class Kdl_dkin(Node):
 
 		marker.type = marker.CUBE
 		marker.action = marker.ADD
-		marker.scale.x = 0.08
-		marker.scale.y = 0.08
-		marker.scale.z = 0.08
+		marker.scale.x = 0.06
+		marker.scale.y = 0.06
+		marker.scale.z = 0.06
 		marker.color.a = 1.0
 		marker.color.r = 0.1
 		marker.color.g = 1.0
@@ -128,7 +128,7 @@ class Kdl_dkin(Node):
 
 		# Przypisanie wartości dla markerów
 		marker.pose.position.x = poses.pose.position.x
-		marker.pose.position.y = -poses.pose.position.y
+		marker.pose.position.y = poses.pose.position.y
 		marker.pose.position.z = poses.pose.position.z
 
 		# Obsługa tablicy markerów
