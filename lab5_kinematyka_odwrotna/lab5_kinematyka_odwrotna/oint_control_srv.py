@@ -91,7 +91,7 @@ class MinimalService(Node):
         marker.action = Marker.DELETEALL
         markerArray.markers.append(marker)
 
-        self.marker_pub.publish(markerArray)
+        ##self.marker_pub.publish(markerArray)
 
         marker.type = marker.SPHERE
         marker.action = marker.ADD
@@ -180,7 +180,7 @@ class MinimalService(Node):
                         id += 1
 
                     #Publikowanie tablicy markerów
-                    self.marker_pub.publish(markerArray)
+                    ##self.marker_pub.publish(markerArray)
 
 
                     # Publikowanie pozycji układu współrzędnych
@@ -229,7 +229,7 @@ class MinimalService(Node):
                         id += 1
 
                     #Publikowanie tablicy markerów
-                    self.marker_pub.publish(markerArray)
+                    ##self.marker_pub.publish(markerArray)
 
 
                     # Publikowanie pozycji układu współrzędnych

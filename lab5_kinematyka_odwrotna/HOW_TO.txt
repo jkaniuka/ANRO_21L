@@ -31,18 +31,20 @@ Zrobione:
 - dodanie markera do końcówki robota ( w celu porównania z trajektorią referencyjną)
 ( wyświetla zielone sześciany w miejscach, gdzie robot faktycznie się porusza - w RViz2 trzeba dodać Marker Array '/marker_KDL')
 - teroretyczna część WIKI ( brakuje między innymi rqt i screena ze śledzenia trajektorii)
-
+- dodałem wykres rqt
+- zakomentowałem publishery markerów, aby tylko /marker nadawał, ale i tak miga :-(
+- wypada chyba uwzględnić offset na końcówkę - zrobione
+- rqt -> w wiki - takie chyba może być
 
 ---------------------------
 
 Do zrobienia (lecę wg. Moodle i notatek):
 
-- wypada chyba uwzględnić offset na końcówkę,
-- przy zaznaczaniu pozycji końcówki trzeba zrobić tak, aby trajektoria była czerwona jak robot się nie porusza / nie może osiągnąć zadanego położenia (zielona już jest)
-- przebiegi z RQT
-- działanie niezależne od położenia początkowego 
-KONCEPCJA:
- - dodatkowy callback dla subscribera, który wywoła się raz (dodanie np. flagi) i zczyta joint_states do parametrów (self)
+
+- rysowanie prostokąta z innej pozycji
+- naprawa migania markerów
+
+
 
 
 

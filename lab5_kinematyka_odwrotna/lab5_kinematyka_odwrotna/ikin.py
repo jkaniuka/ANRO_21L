@@ -72,9 +72,9 @@ class Ikin(Node):
 		marker.scale.y = 0.05
 		marker.scale.z = 0.05
 		marker.color.a = 1.0
-		marker.color.r = 0.5
-		marker.color.g = 0.5
-		marker.color.b = 0.5
+		# marker.color.r = 0.5
+		# marker.color.g = 0.5
+		# marker.color.b = 0.5
 
 
 
@@ -91,7 +91,7 @@ class Ikin(Node):
 
 
 		##obsługa kinematyki odwrotnej
-		x =  joint3 -d_values_from_DH[2]
+		x =  joint3 -d_values_from_DH[2] - 0.05
 		y =  -(joint2 + d_values_from_DH[1]) 
 		z =  joint1 - d_values_from_DH[0] - 1
 		print("x", x)
