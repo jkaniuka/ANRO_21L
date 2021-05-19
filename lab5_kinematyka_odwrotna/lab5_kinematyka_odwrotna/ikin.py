@@ -113,6 +113,22 @@ class Ikin(Node):
 			self.get_logger().warn("Position is out of range")
 			joint_state.position = [float(self.last_z_val), float(self.last_y_val), float(self.last_x_val)]
 			self.joint_pub.publish(joint_state)
+			marker.color.r = 0.9
+			marker.color.g = 0.0
+			marker.color.b = 0.0
+			marker.pose.position.x = 2 + float(x)
+			marker.pose.position.y = -3 - float(y)
+			marker.pose.position.z = 2 + float(z)
+			
+			self.markerArray.markers.append(marker)
+
+			id = 0
+			for m in self.markerArray.markers:
+				m.id = id
+				id += 1
+
+			#Publikowanie tablicy markerów
+			self.marker_pub.publish(self.markerArray)
 		else:
 
 			joint_state.position = [z, y, x]
@@ -122,7 +138,9 @@ class Ikin(Node):
 			
 			self.joint_pub.publish(joint_state)
 
-
+			marker.color.r = 0.0
+			marker.color.g = 1.0
+			marker.color.b = 0.0
 			# Przypisanie wartości dla markerów
 			marker.pose.position.x = 2 + float(x)
 			marker.pose.position.y = -3 - float(y)

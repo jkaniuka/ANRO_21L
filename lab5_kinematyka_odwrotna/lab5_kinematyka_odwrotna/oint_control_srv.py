@@ -36,22 +36,27 @@ class MinimalService(Node):
         self.values = readDHfile()
 
         # Wektor pozycji początkowych w stawach
-        # self.start_positions = [2, -3, 2]
+        self.start_positions = [2, -3, 2]
 
         self.srv = self.create_service(OpInvKin, 'interpolacja_op', self.interpolation_callback)  
-    #     self.subscribtion = self.create_subscription(JointState, '/joint_states', self.initial_pose_callback, 10)
+        self.subscribtion = self.create_subscription(JointState, '/joint_states', self.initial_pose_callback, 10)
 
-    # def initial_pose_callback(self,msg):
-    #     # Pobranie pozycji startowej w celu poprawnego rozpoczęcia zadawania trajektorii referencyjnej
-    #     self.start_positions[0] = msg.position[0]
-    #     self.start_positions[1] = msg.position[1]
-    #     self.start_positions[2] = msg.position[2]
+    def initial_pose_callback(self,msg):
+        # Pobranie pozycji startowej w celu poprawnego rozpoczęcia zadawania trajektorii referencyjnej
+        self.start_positions[0] = 2 + msg.position[0]
+        self.start_positions[1] = -3 - msg.position[1]
+        self.start_positions[2] = 2 + msg.position[2]
+        print(self.start_positions[0])
+        print(self.start_positions[1])
+        print(self.start_positions[2])
 
     def interpolation_callback(self, request, response):
-        start_positions = [2, -3, 2]
-        last_x = start_positions[0]
-        last_y = start_positions[1]
-        last_z = start_positions[2]
+        print(self.start_positions[0])
+        print(self.start_positions[1])
+        print(self.start_positions[2])
+        last_x = self.start_positions[2]
+        last_y = self.start_positions[1]
+        last_z = self.start_positions[0]
 
         d_values_from_DH = []
 
@@ -116,6 +121,9 @@ class MinimalService(Node):
 
 
                 for i in range(1,steps+1):
+                    print(self.start_positions[0])
+                    print(self.start_positions[1])
+                    print(self.start_positions[2])
                     qos_profile = QoSProfile(depth=10)
                     pose_publisher = self.create_publisher(PoseStamped, '/pose_op_interpolation', qos_profile)
                     poses = PoseStamped()
@@ -126,30 +134,30 @@ class MinimalService(Node):
                     poses.pose.position.x = float(last_x)
 
                     if i < j:
-                        poses.pose.position.y = start_positions[1] + ((-d_values_from_DH[1]+request.figure_param_a - start_positions[1])/(request.time_of_move/(steps/j)))*sample_time*i
+                        poses.pose.position.y = self.start_positions[1] + ((-d_values_from_DH[1]+request.figure_param_a - self.start_positions[1])/(request.time_of_move/(steps/j)))*sample_time*i
                         last_y = poses.pose.position.y
                         poses.pose.position.z = float(last_z)
-                        print(i)
+                        print(poses.pose.position.y)
 
 
                     if i >= j and i <= j+k:
                         poses.pose.position.y = float(last_y)
 
-                        poses.pose.position.z = start_positions[2] + (((d_values_from_DH[0]+1)-request.figure_param_b  - start_positions[2])/(request.time_of_move/(steps/k)))*sample_time*(i-j)
+                        poses.pose.position.z = self.start_positions[0] + (((d_values_from_DH[0]+1)-request.figure_param_b  - self.start_positions[0])/(request.time_of_move/(steps/k)))*sample_time*(i-j)
                         last_z = poses.pose.position.z
-                        print(i-j)
+                        print(poses.pose.position.z)
                     if i > j+k and i < 2*j+k:
                         poses.pose.position.z = float(last_z)
 
-                        poses.pose.position.y = start_positions[1]+request.figure_param_a - ((-d_values_from_DH[1] - start_positions[1]+request.figure_param_a)/(request.time_of_move/(steps/j)))*sample_time*(i-j-k)
+                        poses.pose.position.y = self.start_positions[1]+request.figure_param_a - ((-d_values_from_DH[1] - self.start_positions[1]+request.figure_param_a)/(request.time_of_move/(steps/j)))*sample_time*(i-j-k)
                         last_y = poses.pose.position.y
-                        print(i-j-k)
+                        print(poses.pose.position.y)
                     if i >= j+k+j and i <= 2*j+2*k:
                         poses.pose.position.y = float(last_y)
 
-                        poses.pose.position.z = start_positions[2]-request.figure_param_b  - (((d_values_from_DH[0]+1)  - start_positions[2]-request.figure_param_b)/(request.time_of_move/(steps/k)))*sample_time*(i-j-k-j)
+                        poses.pose.position.z = self.start_positions[0]-request.figure_param_b  - (((d_values_from_DH[0]+1)  - self.start_positions[0]-request.figure_param_b)/(request.time_of_move/(steps/k)))*sample_time*(i-j-k-j)
                         last_z = poses.pose.position.z
-                        print(i-j-k-j)
+                        print(poses.pose.position.z)
 
                     if i > 2*j+2*k:
                         poses.pose.position.y = float(last_y)
@@ -198,8 +206,8 @@ class MinimalService(Node):
                     poses.header.frame_id = "/base_link"
 
                     poses.pose.position.x = float(last_x)
-                    poses.pose.position.y = start_positions[1] + request.figure_param_a*math.cos(2 * math.pi * (1/request.time_of_move) * sample_time * i)
-                    poses.pose.position.z = start_positions[2] + request.figure_param_b*math.sin(2 * math.pi * (1/request.time_of_move) * sample_time * i)
+                    poses.pose.position.y = self.start_positions[1] + request.figure_param_a*math.cos(2 * math.pi * (1/request.time_of_move) * sample_time * i)
+                    poses.pose.position.z = self.start_positions[0] + request.figure_param_b*math.sin(2 * math.pi * (1/request.time_of_move) * sample_time * i)
 
 
                     
