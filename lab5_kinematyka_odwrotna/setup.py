@@ -34,7 +34,8 @@ setup(
             'service2 = lab5_kinematyka_odwrotna.oint_control_srv:main',
             'client2 = lab5_kinematyka_odwrotna.oint:main',
             'ikin = lab5_kinematyka_odwrotna.ikin:main',
-            'kdl = lab5_kinematyka_odwrotna.kdl:main'
+            'kdl = lab5_kinematyka_odwrotna.kdl:main',
+            'nonkdl = lab5_kinematyka_odwrotna.nonkdl:main'
         ],
     },
 )

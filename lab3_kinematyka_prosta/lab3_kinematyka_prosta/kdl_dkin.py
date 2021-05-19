@@ -27,12 +27,14 @@ class Kdl_dkin(Node):
 			10)
 		self.subscription  # prevent unused variable warning
 
+		self.values = readYAMLfile()
+
 
 	def listener_callback(self, msg):
 
 
 
-		values = readYAMLfile()
+		values = self.values
 
 
 		#Kinematic chain

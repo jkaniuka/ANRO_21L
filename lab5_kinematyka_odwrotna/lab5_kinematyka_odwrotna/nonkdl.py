@@ -89,7 +89,7 @@ class NonKdl_dkin(Node):
 def readDHfile():
 
     with open(os.path.join(
-        get_package_share_directory('lab3_kinematyka_prosta'),'Tablica_MD-H.json'), 'r') as file:
+        get_package_share_directory('lab5_kinematyka_odwrotna'),'Tablica_MD-H.json'), 'r') as file:
 
         values = json.loads(file.read())
 
