@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1/Description Topic1
-        - /MarkerArray1
         - /Pose1
         - /MarkerArray2
       Splitter Ratio: 0.4989154040813446
@@ -127,7 +126,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        {}
+        "": true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -136,8 +135,8 @@ Visualization Manager:
         Value: /marker
       Value: true
     - Alpha: 1
-      Axes Length: 1
-      Axes Radius: 0.10000000149011612
+      Axes Length: 0.10000000149011612
+      Axes Radius: 0.05000000074505806
       Class: rviz_default_plugins/Pose
       Color: 255; 25; 0
       Enabled: true
@@ -209,25 +208,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 7.320592403411865
+      Distance: 8.353702545166016
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: -0.9227597117424011
+        Y: -1.6721405982971191
+        Z: 1.6502372026443481
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7997958660125732
+      Pitch: 0.21979635953903198
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.068572521209717
+      Yaw: 5.918565273284912
     Saved: ~
 Window Geometry:
   Displays:

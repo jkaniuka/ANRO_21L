@@ -49,10 +49,6 @@ class Ikin(Node):
 		self.last_z_val = 0
 
 
-
-
-
-
 	def send_warning(self):
 		self.ikin.get_logger().warn('Nie można przejść do żądanego położenia z podwodu mechanicznych ograniczeń manipulatora')
 
@@ -62,7 +58,7 @@ class Ikin(Node):
 
 		joint1 = msg.pose.position.z
 		joint2 = msg.pose.position.y
-		joint3 = msg.pose.position.x
+		joint3 = msg.pose.position.x -0.05
 
 		d_values_from_DH = []
 		# Obsługa markerów
@@ -81,7 +77,7 @@ class Ikin(Node):
 
 
 		##obsługa kinematyki odwrotnej
-		x =  joint3 -d_values_from_DH[2] - 0.05
+		x =  joint3 -d_values_from_DH[2]
 		y =  -(joint2 + d_values_from_DH[1]) 
 		z =  joint1 - d_values_from_DH[0] - 1
 
@@ -96,7 +92,7 @@ class Ikin(Node):
 		print(y)
 		print(z)
 
-		if( not ((x <= 0) & (x > -d_values_from_DH[2])) or 
+		if( not ((x -0.05 <= 0 ) & (x > -(d_values_from_DH[2]))) or 
 			not ((y <= 0) & (y > -d_values_from_DH[1])) or
 			not ((z <= 0) & (z >= -d_values_from_DH[0]))):
 
@@ -108,13 +104,13 @@ class Ikin(Node):
 			self.marker.color.r = 0.9
 			self.marker.color.g = 0.0
 			self.marker.color.b = 0.0
-			self.marker.pose.position.x = d_values_from_DH[2] + 0.05 + float(x)
+			self.marker.pose.position.x = d_values_from_DH[2]  + float(x) +0.05 
 			self.marker.pose.position.y = -d_values_from_DH[1] - float(y)
 			self.marker.pose.position.z = d_values_from_DH[0] +1 + float(z)
 
 			if(self.count > self.MARKERS_MAX):
 				pass
-				# self.markerArray.markers.pop(0)
+				self.markerArray.markers.pop(0)
 			
 			self.count += 1
 			self.markerArray.markers.append(self.marker)
@@ -141,21 +137,20 @@ class Ikin(Node):
 			self.marker.color.b = 0.0
 			
 			# Przypisanie wartości dla markerów
-			self.marker.pose.position.x = d_values_from_DH[2] + 0.05 + float(x)
+			self.marker.pose.position.x = d_values_from_DH[2] + float(x) +0.05 
 			self.marker.pose.position.y = -d_values_from_DH[1] - float(y)
 			self.marker.pose.position.z = d_values_from_DH[0] +1 + float(z)
 
 			if(self.count > self.MARKERS_MAX):
 				self.markerArray.markers.pop(0)
 			
-			self.count += 1
-
-			self.markerArray.markers.append(self.marker)
-
+			
 			id = 0
 			for m in self.markerArray.markers:
 				m.id = id
 				id += 1
+			self.markerArray.markers.append(self.marker)
+			self.count += 1
 
 			#Publikowanie tablicy markerów
 			self.marker_pub.publish(self.markerArray)

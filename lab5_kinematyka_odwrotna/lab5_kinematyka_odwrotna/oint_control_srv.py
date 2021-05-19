@@ -116,7 +116,7 @@ class MinimalService(Node):
                     now = self.get_clock().now()
                     poses.header.stamp = ROSClock().now().to_msg()
                     poses.header.frame_id = "/base_link"
-                    poses.pose.position.x = float(last_x)
+                    poses.pose.position.x = float(last_x) + 0.05 
 
                     if i <= j:
                         poses.pose.position.y = self.start_positions[1] + ((request.figure_param_a)/(request.time_of_move/(steps/j)))*sample_time*i
@@ -150,6 +150,7 @@ class MinimalService(Node):
                     
                     # Obsługa tablicy markerów
                     if(self.count > self.MARKERS_MAX):
+                        
                         markerArray.markers.pop(0)
                     
                     markerArray.markers.append(marker)
@@ -181,13 +182,15 @@ class MinimalService(Node):
                     poses.header.stamp = ROSClock().now().to_msg()
                     poses.header.frame_id = "/base_link"
 
-                    poses.pose.position.x = float(last_x)
+                    poses.pose.position.x = float(last_x) +0.05 
                     poses.pose.position.y = self.start_positions[1] + request.figure_param_a*math.cos(2 * math.pi * (1/request.time_of_move) * sample_time * i)
                     poses.pose.position.z = self.start_positions[0] + request.figure_param_b*math.sin(2 * math.pi * (1/request.time_of_move) * sample_time * i)
 
 
-                    
-
+                    # Obsługa tablicy markerów
+                    if(self.count > self.MARKERS_MAX):
+                        
+                        markerArray.markers.pop(0)
 
                     # Przypisanie wartości dla markerów
                     marker.pose.position.x = poses.pose.position.x
@@ -203,9 +206,9 @@ class MinimalService(Node):
                     for m in markerArray.markers:
                         m.id = id
                         id += 1
-
+                    self.count += 1
                     #Publikowanie tablicy markerów
-                    ##self.marker_pub.publish(markerArray)
+                    self.marker_pub.publish(markerArray)
 
 
                     # Publikowanie pozycji układu współrzędnych
