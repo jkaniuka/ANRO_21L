@@ -17,12 +17,25 @@ import yaml
 
 
 
+
 class Ikin(Node):
 
 	def __init__(self):
 		super().__init__('ikin')
 		self.values = readDHfile()
+		
+		# Obsługa markerów
 		self.markerArray = MarkerArray()
+		qos_profile1 = QoSProfile(depth=10)
+		self.marker_pub = self.create_publisher(MarkerArray, '/marker', qos_profile1)
+		self.marker = Marker()
+		self.marker.header.frame_id = "base_link"
+		self.marker.id = 0
+		self.marker.action = Marker.DELETEALL
+		self.markerArray.markers.append(self.marker)
+		self.marker_pub.publish(self.markerArray)
+		self.count = 0
+		self.MARKERS_MAX = 1000
 
 		self.subscription = self.create_subscription(
 			PoseStamped(),
@@ -38,6 +51,8 @@ class Ikin(Node):
 
 
 
+
+
 	def send_warning(self):
 		self.ikin.get_logger().warn('Nie można przejść do żądanego położenia z podwodu mechanicznych ograniczeń manipulatora')
 
@@ -48,79 +63,61 @@ class Ikin(Node):
 		joint1 = msg.pose.position.z
 		joint2 = msg.pose.position.y
 		joint3 = msg.pose.position.x
-		#print("joint1: ", joint1)
-		#print("joint2: ", joint2)
-		#print("joint3: ", joint3)
 
 		d_values_from_DH = []
 		# Obsługa markerów
-		
-		qos_profile1 = QoSProfile(depth=10)
-		self.marker_pub = self.create_publisher(MarkerArray, '/marker', qos_profile1)
-		marker = Marker()
-		marker.header.frame_id = "base_link"
-
-		marker.id = 0
-		marker.action = Marker.DELETEALL
-		self.markerArray.markers.append(marker)
-
-		self.marker_pub.publish(self.markerArray)
-
-		marker.type = marker.SPHERE
-		marker.action = marker.ADD
-		marker.scale.x = 0.05
-		marker.scale.y = 0.05
-		marker.scale.z = 0.05
-		marker.color.a = 1.0
-		# marker.color.r = 0.5
-		# marker.color.g = 0.5
-		# marker.color.b = 0.5
-
-
-
+		self.marker.type = self.marker.SPHERE
+		self.marker.action = self.marker.ADD
+		self.marker.scale.x = 0.05
+		self.marker.scale.y = 0.05
+		self.marker.scale.z = 0.05
+		self.marker.color.a = 1.0
 
 		for i, mark in enumerate(self.values.keys()):
-			#print(mark)
-
             # przypisanie parametrów DH
 			a, d, alpha, theta = self.values[mark]
 			a, d, alpha, theta = float(a), float(d), float(alpha), float(theta)
 			d_values_from_DH.append(d)
 
 
-
-
 		##obsługa kinematyki odwrotnej
 		x =  joint3 -d_values_from_DH[2] - 0.05
 		y =  -(joint2 + d_values_from_DH[1]) 
 		z =  joint1 - d_values_from_DH[0] - 1
-		print("x", x)
-		print("y", y)
-		print("z", z)
 
-
+		# Przygotowanie publishera
 		qos_profile = QoSProfile(depth=10)
 		self.joint_pub = self.create_publisher(JointState, '/joint_states', qos_profile)
 		joint_state = JointState()
 		now = self.get_clock().now()
 		joint_state.header.stamp = now.to_msg()
 		joint_state.name = ['base_link__link1', 'link1__link2', 'link2__link3']
+		print(x)
+		print(y)
+		print(z)
 
-
-		if( not ((x <= 0) & (x >= -d_values_from_DH[2])) or 
-			not ((y <= 0) & (y >= -d_values_from_DH[1])) or
+		if( not ((x <= 0) & (x > -d_values_from_DH[2])) or 
+			not ((y <= 0) & (y > -d_values_from_DH[1])) or
 			not ((z <= 0) & (z >= -d_values_from_DH[0]))):
+
 			self.get_logger().warn("Position is out of range")
 			joint_state.position = [float(self.last_z_val), float(self.last_y_val), float(self.last_x_val)]
 			self.joint_pub.publish(joint_state)
-			marker.color.r = 0.9
-			marker.color.g = 0.0
-			marker.color.b = 0.0
-			marker.pose.position.x = 2 + float(x)
-			marker.pose.position.y = -3 - float(y)
-			marker.pose.position.z = 2 + float(z)
+
+			# Obsługa tablicy markerów
+			self.marker.color.r = 0.9
+			self.marker.color.g = 0.0
+			self.marker.color.b = 0.0
+			self.marker.pose.position.x = d_values_from_DH[2] + 0.05 + float(x)
+			self.marker.pose.position.y = -d_values_from_DH[1] - float(y)
+			self.marker.pose.position.z = d_values_from_DH[0] +1 + float(z)
+
+			if(self.count > self.MARKERS_MAX):
+				pass
+				# self.markerArray.markers.pop(0)
 			
-			self.markerArray.markers.append(marker)
+			self.count += 1
+			self.markerArray.markers.append(self.marker)
 
 			id = 0
 			for m in self.markerArray.markers:
@@ -138,16 +135,22 @@ class Ikin(Node):
 			
 			self.joint_pub.publish(joint_state)
 
-			marker.color.r = 0.0
-			marker.color.g = 1.0
-			marker.color.b = 0.0
-			# Przypisanie wartości dla markerów
-			marker.pose.position.x = 2 + float(x)
-			marker.pose.position.y = -3 - float(y)
-			marker.pose.position.z = 2 + float(z)
-
 			# Obsługa tablicy markerów
-			self.markerArray.markers.append(marker)
+			self.marker.color.r = 0.0
+			self.marker.color.g = 1.0
+			self.marker.color.b = 0.0
+			
+			# Przypisanie wartości dla markerów
+			self.marker.pose.position.x = d_values_from_DH[2] + 0.05 + float(x)
+			self.marker.pose.position.y = -d_values_from_DH[1] - float(y)
+			self.marker.pose.position.z = d_values_from_DH[0] +1 + float(z)
+
+			if(self.count > self.MARKERS_MAX):
+				self.markerArray.markers.pop(0)
+			
+			self.count += 1
+
+			self.markerArray.markers.append(self.marker)
 
 			id = 0
 			for m in self.markerArray.markers:
@@ -156,8 +159,6 @@ class Ikin(Node):
 
 			#Publikowanie tablicy markerów
 			self.marker_pub.publish(self.markerArray)
-			print("publik")
-
 
 # czytanie parametrów tablicy DH z pliku
 def readDHfile():
