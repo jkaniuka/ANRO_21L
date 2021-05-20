@@ -183,8 +183,8 @@ class MinimalService(Node):
                     poses.header.frame_id = "/base_link"
 
                     poses.pose.position.x = float(last_x) +0.05 
-                    poses.pose.position.y = self.start_positions[1] + request.figure_param_a*math.cos(2 * math.pi * (1/request.time_of_move) * sample_time * i)
-                    poses.pose.position.z = self.start_positions[0] + request.figure_param_b*math.sin(2 * math.pi * (1/request.time_of_move) * sample_time * i)
+                    poses.pose.position.y = self.start_positions[1]  + request.figure_param_a*math.cos(2 * math.pi * (1/request.time_of_move) * sample_time * i ) - request.figure_param_a
+                    poses.pose.position.z = self.start_positions[0] + request.figure_param_b*math.sin(2 * math.pi * (1/request.time_of_move) * sample_time * i) 
 
 
                     # Obsługa tablicy markerów
